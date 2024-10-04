@@ -89,3 +89,18 @@ def standardize(data):
     
     return standardized_data
 
+def split_data(x, y, ratio, seed=1):
+    # set seed
+    np.random.seed(seed)
+    # ***************************************************
+    # INSERT YOUR CODE HERE
+    # split the data based on the given ratio: TODO
+    # ***************************************************
+    N = x.shape[0]
+    indices = np.random.permutation(N)
+    split = np.floor(ratio * N).astype(int)
+    x_train = x[indices[:split]]
+    x_test = x[indices[split:]]
+    y_train = y[indices[:split]]
+    y_test = y[indices[split:]]
+    return x_train, x_test, y_train, y_test
