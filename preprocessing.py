@@ -22,7 +22,8 @@ def correlation(data, threshold=0.95):
     # Create a new array with the columns to keep
     return list(to_remove)
 
-def columns_to_drop(data):
+
+def columns_to_drop(data, correlation_thr = 0.95, nan_thr = 0.9, std_thr = 0.1):
     """
     This function returns the columns to drop in the data, namely:
     - columns with high number of missing values
@@ -32,52 +33,49 @@ def columns_to_drop(data):
     columns_to_drop = []
     
     # drop columns with more than 90% missing values
-    thr = 0.9
     nan_col = np.isnan(data).sum(axis=0)
-    columns_missing_values = np.where(nan_col > (thr * data.shape[0]))[0].tolist()
+    columns_missing_values = np.where(nan_col > (nan_thr * data.shape[0]))[0].tolist()
     columns_to_drop.extend(columns_missing_values)
-    print('Number of columns with more than 90% NaN:', len(columns_missing_values))
+    print(f'Number of columns with more than {nan_thr} NaN:', len(columns_missing_values))
 
     # drop columns with std < 0.1
     std_devs = np.nanstd(data, axis=0)  # std, ignoring NaNs
-    low_std_mask = std_devs < 0.1 # mask of columns with std < 0.1
+    low_std_mask = std_devs < std_thr # mask of columns with std < 0.1
     columns_constant = np.where(low_std_mask)[0].tolist()
     columns_to_drop.extend(columns_constant)
-    print('Number of columns with std < 0.1:', len(columns_constant))
+    print(f'Number of columns with std < {std_thr}:', len(columns_constant))
     
     # drop perfectly correlated columns
-    thr = 0.95
-    columns_correlated = correlation(data, thr)
+    columns_correlated = correlation(data, correlation_thr)
     columns_to_drop.extend(columns_correlated)
-    print('Number of perfectly correlated columns:', len(columns_correlated))
+    print(f'Number of perfectly correlated columns:', len(columns_correlated))
 
     return list(set(columns_to_drop)) # removes duplicates
 
 
-def clean_data(data):
+def clean_data(x_train, x_test, correlation_thr = 0.95, nan_thr = 0.9, std_thr = 0.1):
     """
     This function cleans the data by dropping columns and handling missing values.
     """
-    to_drop = columns_to_drop(data)
+    to_drop = columns_to_drop(x_train, correlation_thr, nan_thr, std_thr)
     print('Columns to drop:', to_drop)
-    clean_data = np.delete(data, to_drop, axis=1)
+    clean_train = np.delete(x_train, to_drop, axis=1)
+    clean_test = np.delete(x_test, to_drop, axis=1)
     
-    # replace missing values with the mean of the column
-    means = np.nanmean(clean_data, axis=0)
-    nan_ids = np.where(np.isnan(clean_data)) # NaN indices
-
-    # Fill NaN values with the corresponding column means
-    clean_data[nan_ids] = np.take(means, nan_ids[1])
+    # Handle missing values
+    clean_train, clean_test = handle_nan(clean_train), handle_nan(clean_test)
     
     # Standardize the data
-    standardized_data = (clean_data - np.mean(clean_data, axis=0)) / np.std(clean_data, axis=0)
+    standardized_train = (clean_train - np.mean(clean_train, axis=0)) / np.std(clean_train, axis=0)
+    standardized_test = (clean_test - np.mean(clean_test, axis=0)) / np.std(clean_test, axis=0)
     
     # Check for correlation post processing 
-    columns_correlated = correlation(standardized_data)
+    columns_correlated = correlation(standardized_train)
     print('Number of perfectly correlated columns after cleaning:', len(columns_correlated))
-    final_data = np.delete(standardized_data, columns_correlated, axis=1)
+    final_train = np.delete(standardized_train, columns_correlated, axis=1)
+    final_test = np.delete(standardized_test, columns_correlated, axis=1)
     
-    return final_data
+    return final_train, final_test
 
 
 def standardize(data):
@@ -88,4 +86,49 @@ def standardize(data):
     standardized_data = (data - np.mean(data, axis=0)) / np.std(data, axis=0)
     
     return standardized_data
+
+
+def is_column_binary(column):
+    """
+    This function checks if the columns are binary.
+    """
+    return all(np.isin(np.unique(column), [0, 1]))
+
+
+def compute_mode(column):
+    """
+    This function calculates the mode of the data.
+    """
+    unique, counts = np.unique(column, return_counts=True) # unique values and their counts
+    return unique[np.argmax(counts)] # return the value with the highest count
+
+def handle_nan(data):
+    """
+    This function replaces NaN values with the mean of the column for non-binary columns and the mode for binary columns.
+
+    """
+    print('Handling NaN values...')
+    cleaned_data = data.copy()
+    for i in range(data.shape[1]):
+        nan_ids = np.where(np.isnan(data[:, i])) # NaN indices
+        mode = compute_mode(data[:, i])
+        mean = np.nanmean(data[:, i])
+        if is_column_binary(data[:, i]): # for binary columns replace NaN with the mode
+            cleaned_data[nan_ids, i] = mode
+        else : # for non-binary columns replace NaN with the mean
+            cleaned_data[nan_ids, i] = np.round(mean) # round to the nearest integer
+    return cleaned_data
+
+
+
+def split_data(x, y, ratio, seed=1):
+    """
+    Split the dataset based on the split ratio.
+    """
+    np.random.seed(seed)
+    indices = np.random.permutation(x.shape[0])
+    n_train = int(np.floor(x.shape[0] * ratio))
+    train_indices = indices[:n_train]
+    test_indices = indices[n_train:]
+    return x[train_indices], y[train_indices], x[test_indices], y[test_indices]
 
