@@ -88,6 +88,7 @@ def standardize(data):
     return standardized_data
 
 
+
 def is_column_binary(column):
     """
     This function checks if the columns are binary.
@@ -131,4 +132,5 @@ def split_data(x, y, ratio, seed=1):
     train_indices = indices[:n_train]
     test_indices = indices[n_train:]
     return x[train_indices], y[train_indices], x[test_indices], y[test_indices]
+
 
