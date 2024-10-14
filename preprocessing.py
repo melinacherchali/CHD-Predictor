@@ -134,3 +134,6 @@ def split_data(x, y, ratio, seed=1):
     return x[train_indices], y[train_indices], x[test_indices], y[test_indices]
 
 
+def threshold(y_pred):
+    mean_data = np.mean(y_pred)
+    return np.where(y_pred >= mean_data, -1, 1)
