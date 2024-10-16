@@ -18,17 +18,18 @@ correlation_thr = 0.8
 nan_thr = 0.8
 std_thr = 0.1
 
-x_train_cleaned, x_test_cleaned = pre.clean_data(x_train, x_test, correlation_thr, nan_thr, std_thr)
+#x_train_cleaned, x_test_cleaned = pre.clean_data(x_train, x_test, correlation_thr, nan_thr, std_thr)
+x_train_submit, x_test_submit = pre.clean_data(x_train_, x_submit, correlation_thr, nan_thr, std_thr)
 
 #Logistic Regression 
-theta = np.zeros(x_train_cleaned.shape[1])
+theta = np.zeros(x_train_submit.shape[1])
 learning_rate = 0.01
 num_iterations = 100
 
 # Train logistic regression model
-theta, cost_history = mdl.gradient_descent(x_train_cleaned, y_train, theta, learning_rate, num_iterations)
+theta, cost_history = mdl.gradient_descent(x_train_submit, y_train, theta, learning_rate, num_iterations)
 
-y_pred = mdl.sigmoid(np.dot(x_train_cleaned, theta))
+y_pred = mdl.sigmoid(np.dot(x_test_submit, theta))
 y_pred = np.round(y_pred)
 y_pred_copy = np.copy(y_pred).astype(int)
 
