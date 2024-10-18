@@ -4,6 +4,7 @@ import helpers as hlp
 import preprocessing as pre
 
 
+
 path = '/Users/maelynenguyen/Desktop/dataset_to_release'
 abs_path = path
 
@@ -62,7 +63,7 @@ def penalized_logistic_regression(y, tx, w, lambda_):
     #loss = calculate_loss(y, tx, w)
     gradient = calculate_gradient(y, tx, w)
     #loss = loss + (lambda_ / (2 * N)) * np.sum(np.square(w))
-    gradient = gradient + lambda_ / N * w
+    gradient = gradient + lambda_ * N * w
     return gradient 
 
 def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
@@ -91,9 +92,8 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     return w
 
 
-# Assuming you have already defined y, x_train_cleaned, and w
-max_iters = 1000
-gamma = 0.01
+
+
 
 w = np.zeros(x_train_cleaned.shape[1])
 print("code is running")
@@ -107,15 +107,44 @@ print("code is running")
 #_, w_penalized = learning_by_penalized_gradient(y, x_train_cleaned, w, gamma, 0.1)
 
 #Regularized Logistic Regression
-w_penalized = reg_logistic_regression(y_train, x_train_cleaned, 0.1, w, 1000, 0.01)
+#Hyperparameters tuning max_iters, gamma, lambda_
+# Define the parameter grid
+param_grid = {
+    'max_iters': [500, 1000, 1500],
+    'gamma': [0.001, 0.01, 0.1],
+    'lambda_': [0.01, 0.1, 1]
+}
+
+# Define a function to perform the grid search
+def grid_search_logistic_regression(y, tx, param_grid):
+    best_params = None
+    best_score = float('inf')
+    
+    for max_iters in param_grid['max_iters']:
+        for gamma in param_grid['gamma']:
+            for lambda_ in param_grid['lambda_']:
+                w = np.zeros(tx.shape[1])
+                w = reg_logistic_regression(y, tx, lambda_, w, max_iters, gamma)
+                loss = calculate_loss(y, tx, w)
+                
+                if loss < best_score:
+                    best_score = loss
+                    best_params = {'max_iters': max_iters, 'gamma': gamma, 'lambda_': lambda_}
+    
+    return best_params
+
+# Perform the grid search
+best_params = grid_search_logistic_regression(y, x_train_cleaned, param_grid)
+print("Best hyperparameters found: ", best_params)
+
+w_penalized = reg_logistic_regression(y, x_train_cleaned, 0.1, w, 1000, 0.01)
 y_pred = sigmoid(np.dot(x_test_cleaned, w_penalized))
+y_pred_ = np.copy(y_pred)
 
-y_pred_ = np.round(y_pred).copy()
+y_pred_threshold = np.where(y_pred_ > np.mean(y_pred_), 1, -1)
+print(y_pred_threshold)
 
-print("marche")
+#max_iters = 1000
+# gamma = 0.01
+hlp.create_csv_submission(test_ids_, y_pred_threshold,"y_pred_ridge.csv")
 
-y_pred_[y_pred_ == 0] = -1
-
-int_y_pred = y_pred_.astype(int)
-print(y_pred_)
-hlp.create_csv_submission(test_ids_, int_y_pred,"y_pred_Logistic_Descent.csv")
