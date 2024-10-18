@@ -61,8 +61,7 @@ def penalized_logistic_regression(y, tx, w, lambda_):
     N = y.shape[0]
     #loss = calculate_loss(y, tx, w)
     gradient = calculate_gradient(y, tx, w)
-    #loss = loss + (lambda_ / (2 * N)) * np.sum(np.square(w))
-    gradient = gradient + lambda_ / N * w
+    gradient = gradient + 2 * lambda_ * w
     return gradient 
 
 def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
@@ -107,7 +106,7 @@ print("code is running")
 #_, w_penalized = learning_by_penalized_gradient(y, x_train_cleaned, w, gamma, 0.1)
 
 #Regularized Logistic Regression
-w_penalized = reg_logistic_regression(y_train, x_train_cleaned, 0.1, w, 1000, 0.01)
+w_penalized = reg_logistic_regression(y, x_train_cleaned, 0.1, w, 1000, 0.01)
 y_pred = sigmoid(np.dot(x_test_cleaned, w_penalized))
 
 y_pred_ = np.round(y_pred).copy()
