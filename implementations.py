@@ -21,7 +21,7 @@ def mean_squared_error_gd(y,tx,initial_w,max_iters,gama):
         error=y-y_
         if error.all()==0:
             return y_,initial_w
-        grad=-(1/n)*(tx.T).dot(error)
+        grad=-(1/2*n)*(tx.T).dot(error)
         initial_w=initial_w-gama*grad
         max_iters-=1
     return (initial_w,msd_error(y_,y))
