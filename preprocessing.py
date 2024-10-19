@@ -29,6 +29,15 @@ def columns_to_drop(data, correlation_thr = 0.95, nan_thr = 0.9, std_thr = 0.1):
     - columns with high number of missing values
     - columns with low std 
     - correlated columns
+    
+    parameters:
+    data: the data
+    correlation_thr: the columns with correlation score above this threshold will be dropped
+    nan_thr: the columns with more than this threshold ratio of NaN values will be dropped
+    std_thr: the columns with std below this threshold will be dropped
+    
+    returns: list of columns to drop
+    
     """
     columns_to_drop = []
     
@@ -56,6 +65,8 @@ def columns_to_drop(data, correlation_thr = 0.95, nan_thr = 0.9, std_thr = 0.1):
 def clean_data(x_train, x_test, correlation_thr = 0.95, nan_thr = 0.9, std_thr = 0.1):
     """
     This function cleans the data by dropping columns and handling missing values.
+    
+    returns: cleaned train and test data
     """
     to_drop = columns_to_drop(x_train, correlation_thr, nan_thr, std_thr)
     print('Columns to drop:', to_drop)
@@ -82,8 +93,10 @@ def standardize(data):
     """
     This function standardizes the data.
     """
+    assert np.isnan(data).sum() == 0, 'Data contains NaN values'
     # Standardize the data
     standardized_data = (data - np.mean(data, axis=0)) / np.std(data, axis=0)
+    
     
     return standardized_data
 
