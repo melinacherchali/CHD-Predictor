@@ -349,3 +349,33 @@ def logistic_loss(y, tx, w):
 
 
 
+### Evaluation ###
+
+
+def f1_score(y_true, y_pred):
+    """
+    Compute the F1 score.
+    Parameters:
+    y_true (numpy.ndarray): The true labels.
+    y_pred (numpy.ndarray): The predicted labels.
+    Returns:
+    float: The F1 score.
+    """
+    tp = np.sum(y_true * y_pred)
+    fp = np.sum((1 - y_true) * y_pred)
+    fn = np.sum(y_true * (1 - y_pred))
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+    return 2 * (precision * recall) / (precision + recall)
+
+
+def accuracy(y_true, y_pred):
+    """
+    Compute the accuracy.
+    Parameters:
+    y_true (numpy.ndarray): The true labels.
+    y_pred (numpy.ndarray): The predicted labels.
+    Returns:
+    float: The accuracy.
+    """
+    return np.mean(y_true == y_pred)
