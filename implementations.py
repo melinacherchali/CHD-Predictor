@@ -126,7 +126,7 @@ def test_function(func):
     print(a[0], "MSE : ", a[1])
 
 def compute_loss(y, tx, w):
-    """Calculate the loss using either MSE or MAE.
+    """Calculate the loss using MSE.
 
     Args:
         y: numpy array of shape=(N, )
