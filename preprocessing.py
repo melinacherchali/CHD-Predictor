@@ -1,5 +1,6 @@
 import numpy as np 
 import helpers as hlp
+import matplotlib.pyplot as plt
 
 
 def correlation(data, threshold=0.95):
@@ -150,3 +151,55 @@ def split_data(x, y, ratio, seed=1):
 def threshold(y_pred):
     mean_data = np.mean(y_pred)
     return np.where(y_pred >= mean_data, -1, 1)
+
+def PCA(xtrain,num_axis,graph=False):
+    """
+    This function performs PCA on the given data. And returns the data projected on the new basis.
+    
+    parameters:
+    xtrain: the input data
+    num_axis: the number of dimensions to keep
+    graph: boolean to plot the percentage of explained variance
+    
+    """
+    
+    # Compute the covariance matrix
+    cov_matrix = np.cov(xtrain, rowvar=False)
+    
+    # Compute the eigenvalues and eigenvectors
+    eig_values, eig_vectors = np.linalg.eigh(cov_matrix)
+    
+    # Sort the eigenvalues in descending order
+    idx = np.argsort(eig_values)[::-1]
+    eig_values = eig_values[idx]
+    eig_vectors = eig_vectors[:, idx]
+    
+    # Select the first num_axis eigenvectors
+    eig_vectors = eig_vectors[:, :num_axis]
+    
+    # Project the data onto the new basis
+    xtrain_pca = np.dot(xtrain, eig_vectors)
+    
+    # Compute the percentage of explained variance
+    explained_variance = np.zeros(eig_values.shape)
+    explained_variance[0] = eig_values[0]
+    for i,v in enumerate(eig_values):
+        if i>0:
+            explained_variance[i] = explained_variance[i-1]+v
+            
+    prct_explained_variance=explained_variance/explained_variance[-1]*100  
+    
+    # Find the number of components needed to explain 90% of the variance      
+    prct90=np.where(prct_explained_variance>90)[0][0]
+    
+    if graph:
+        
+        plt.figure()
+        plt.plot(prct_explained_variance,label="Percentage of explained variance by components")
+        plt.xlabel("Number of components")
+        plt.ylabel("Percentage of explained variance")
+        plt.axvline(prct90, color='r', linestyle='--',label="90% explained variance at "+str(prct90)+" components")
+        plt.legend()
+        plt.show()
+    
+    return xtrain_pca
