@@ -20,11 +20,11 @@ def least_squares(y, tx):
     A = np.linalg.inv(tx.T @ tx)
     w = A @ tx.T @ y
     N = tx.shape[0]
-    mse = 1/(2*N) * np.sum((y - tx @ w)**2)
+    mse = 1 / (2 * N) * np.sum((y - tx @ w) ** 2)
 
     return w, mse
-    
-    
+
+
 def test_model(y_test, x_test, w):
     """Test the model using the test data.
     Args:
@@ -39,38 +39,42 @@ def test_model(y_test, x_test, w):
     8.666684749742561e-33
     """
     N = x_test.shape[0]
-    mse = 1/(2*N) * np.sum((y_test - x_test @ w)**2)
+    mse = 1 / (2 * N) * np.sum((y_test - x_test @ w) ** 2)
     return mse
-    
-    
-    
-    
+
 
 # Sigmoid function
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
+
 
 # Logistic regression cost function
 def compute_cost(X, y, theta):
     m = len(y)
     h = sigmoid(np.dot(X, theta))
     epsilon = 1e-5  # Avoid log(0)
-    cost = -1/m * (np.dot(y, np.log(h + epsilon)) + np.dot((1 - y), np.log(1 - h + epsilon)))
+    cost = (
+        -1
+        / m
+        * (np.dot(y, np.log(h + epsilon)) + np.dot((1 - y), np.log(1 - h + epsilon)))
+    )
     return cost
+
 
 # Gradient descent for logistic regression
 def gradient_descent(X, y, theta, learning_rate, num_iterations):
     m = len(y)
     cost_history = []
-    
+
     for i in range(num_iterations):
         h = sigmoid(np.dot(X, theta))
         gradient = np.dot(X.T, (h - y)) / m
         theta -= learning_rate * gradient
         cost = compute_cost(X, y, theta)
         cost_history.append(cost)
-    
+
     return theta, cost_history
+
 
 # Predict function for logistic regression
 def predict(X, theta):
