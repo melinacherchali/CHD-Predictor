@@ -1,6 +1,7 @@
 import numpy as np 
 import helpers as hlp
 import matplotlib.pyplot as plt
+import time
 
 
 def correlation(data, threshold=0.95):
@@ -19,7 +20,7 @@ def correlation(data, threshold=0.95):
             if abs(correlation_matrix[i, j]) >= threshold:
                 to_remove.add(j)  # Mark the column j for removal
                 # print("Column", j, "is perfectly correlated with column", i)
-
+    
     # Create a new array with the columns to keep
     return list(to_remove)
 
