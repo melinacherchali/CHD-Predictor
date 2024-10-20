@@ -1,5 +1,6 @@
 import numpy as np
 import helpers as hlp
+import matplotlib.pyplot as plt
 
 
 def correlation(data, threshold=0.95):
@@ -29,6 +30,15 @@ def columns_to_drop(data, correlation_thr=0.95, nan_thr=0.9, std_thr=0.1):
     - columns with high number of missing values
     - columns with low std
     - correlated columns
+    
+    parameters:
+    data: the data
+    correlation_thr: the columns with correlation score above this threshold will be dropped
+    nan_thr: the columns with more than this threshold ratio of NaN values will be dropped
+    std_thr: the columns with std below this threshold will be dropped
+    
+    returns: list of columns to drop
+    
     """
     columns_to_drop = []
 
@@ -58,6 +68,8 @@ def columns_to_drop(data, correlation_thr=0.95, nan_thr=0.9, std_thr=0.1):
 def clean_data(x_train, x_test, correlation_thr=0.95, nan_thr=0.9, std_thr=0.1):
     """
     This function cleans the data by dropping columns and handling missing values.
+    
+    returns: cleaned train and test data
     """
     to_drop = columns_to_drop(x_train, correlation_thr, nan_thr, std_thr)
     print("Columns to drop:", to_drop)
@@ -91,9 +103,11 @@ def standardize(data):
     """
     This function standardizes the data.
     """
+    assert np.isnan(data).sum() == 0, 'Data contains NaN values'
     # Standardize the data
     standardized_data = (data - np.mean(data, axis=0)) / np.std(data, axis=0)
-
+    
+    
     return standardized_data
 
 
@@ -147,3 +161,55 @@ def split_data(x, y, ratio, seed=1):
 def threshold(y_pred):
     mean_data = np.mean(y_pred)
     return np.where(y_pred >= mean_data, -1, 1)
+
+def PCA(xtrain,num_axis,graph=False):
+    """
+    This function performs PCA on the given data. And returns the data projected on the new basis.
+    
+    parameters:
+    xtrain: the input data
+    num_axis: the number of dimensions to keep
+    graph: boolean to plot the percentage of explained variance
+    
+    """
+    
+    # Compute the covariance matrix
+    cov_matrix = np.cov(xtrain, rowvar=False)
+    
+    # Compute the eigenvalues and eigenvectors
+    eig_values, eig_vectors = np.linalg.eigh(cov_matrix)
+    
+    # Sort the eigenvalues in descending order
+    idx = np.argsort(eig_values)[::-1]
+    eig_values = eig_values[idx]
+    eig_vectors = eig_vectors[:, idx]
+    
+    # Select the first num_axis eigenvectors
+    eig_vectors = eig_vectors[:, :num_axis]
+    
+    # Project the data onto the new basis
+    xtrain_pca = np.dot(xtrain, eig_vectors)
+    
+    # Compute the percentage of explained variance
+    explained_variance = np.zeros(eig_values.shape)
+    explained_variance[0] = eig_values[0]
+    for i,v in enumerate(eig_values):
+        if i>0:
+            explained_variance[i] = explained_variance[i-1]+v
+            
+    prct_explained_variance=explained_variance/explained_variance[-1]*100  
+    
+    # Find the number of components needed to explain 90% of the variance      
+    prct90=np.where(prct_explained_variance>90)[0][0]
+    
+    if graph:
+        
+        plt.figure()
+        plt.plot(prct_explained_variance,label="Percentage of explained variance by components")
+        plt.xlabel("Number of components")
+        plt.ylabel("Percentage of explained variance")
+        plt.axvline(prct90, color='r', linestyle='--',label="90% explained variance at "+str(prct90)+" components")
+        plt.legend()
+        plt.show()
+    
+    return xtrain_pca
