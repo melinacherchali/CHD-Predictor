@@ -219,14 +219,14 @@ def PCA(xtrain,num_axis,graph=False):
     
 def i_j_rule_treshold(data,treshold):
     """
-    This function returns once the columns/rows having their mean above a treshold .
+    This function returns once the columns/rows having their median above a treshold .
     """
-    col_mean=np.mean(data,axis=0)
-    row_mean=np.mean(data,axis=1)
-    print("Max mean NaN score rows : ",np.max(row_mean))
-    print("Max mean NaN score columns : ",np.max(col_mean))
-    i_drop=np.where(row_mean>treshold)
-    j_drop=np.where(col_mean>treshold)
+    col_med=np.median(data,axis=0)
+    row_med=np.median(data,axis=1)
+    print("Max median NaN score rows : ",np.max(row_med))
+    print("Max median NaN score columns : ",np.max(col_med))
+    i_drop=np.where(row_med>treshold)
+    j_drop=np.where(col_med>treshold)
     return i_drop[0],j_drop[0]
 
 def alternative_nan_handeling(data_x,data_y,data_x_to_predict=None,nan_trd=.5):
