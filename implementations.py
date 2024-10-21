@@ -62,7 +62,7 @@ def ridge_regression(y, tx, lambda_):
     w = np.linalg.solve(a, b)
     return (w, compute_loss(y, tx, w))
 
-def logistic_regression(y, tx, initial_w, max_iters, gamma):
+def logistic_regression(y, tx, initial_w, max_iters, gamma,losses_return = False):
     """
     Perform logistic regression using gradient descent.
     Parameters:
@@ -75,14 +75,18 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma):
     w: final weight vector
     loss: final loss value
     """
-
+    
     w = initial_w
     loss = logistic_loss(y, tx, w)
+    losses=[loss]
     for i in range(max_iters):
         gradient = logistic_gradient(y, tx, w)
         w = w - gamma * gradient
         loss = logistic_loss(y, tx, w)
-    return w, loss
+        losses.append(loss)
+    if losses_return:
+        return w, loss, losses
+    return w, loss,
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """
@@ -336,10 +340,7 @@ def penalized_logistic_regression(y, tx, w, lambda_):
 
 def logistic_loss(y, tx, w):
     N = tx.shape[0]
-    return (
-        -1
-        / N
-        * np.sum(y * np.log(sigmoid(tx @ w)) + (1 - y) * np.log(1 - sigmoid(tx @ w)))
+    return (-1/ N* np.sum(y * np.log(sigmoid(tx @ w)) + (1 - y) * np.log(1 - sigmoid(tx @ w)))
     )
 
 
