@@ -217,14 +217,19 @@ def PCA(xtrain,num_axis,graph=False):
 
 
     
-def i_j_upper_treshold(data,treshold):
+def i_j_rule_treshold(data,treshold):
     """
-    This function returns once the columns and rows of the elements of the matrix that are above a certain treshold.
+    This function returns once the columns/rows having their mean above a treshold .
     """
-    i_drop,j_drop=np.where(data>treshold)
-    return np.unique(i_drop),np.unique(j_drop)
+    col_mean=np.mean(data,axis=0)
+    row_mean=np.mean(data,axis=1)
+    print("Max mean NaN score rows : ",np.max(row_mean))
+    print("Max mean NaN score columns : ",np.max(col_mean))
+    i_drop=np.where(row_mean>treshold)
+    j_drop=np.where(col_mean>treshold)
+    return i_drop[0],j_drop[0]
 
-def alternative_nan_handeling(data_x,data_y,data_x_to_predict=None,nan_trd=0.7):
+def alternative_nan_handeling(data_x,data_y,data_x_to_predict=None,nan_trd=.5):
     """
     This function drops the rows and columns with NaN values above a certain threshold.
     The criterion is computed, for each item of the array by taking the square root of the product of the NaN ratio of the row and column.
@@ -250,8 +255,7 @@ def alternative_nan_handeling(data_x,data_y,data_x_to_predict=None,nan_trd=0.7):
     # to find a score for each row and column that take into account the NaN ratio
     # we can multiply the two matrices and take the square root
     dual_ratio=np.sqrt(x*y)
-    
-    i_drop,j_drop=i_j_upper_treshold(dual_ratio,nan_trd)
+    i_drop,j_drop=i_j_rule_treshold(dual_ratio,nan_trd)
     #the rows to drop should be only in the data_x avoiding the data_x_to_predict
     i_drop_=i_drop[i_drop<data_x.shape[0]]
     #return the data with the rows and columns dropped
@@ -270,7 +274,7 @@ def alternative_nan_handeling(data_x,data_y,data_x_to_predict=None,nan_trd=0.7):
     
     return w_colrow_x , w_row_y
 
-def Edited_clean_data(x_train,y_train, x_test, correlation_thr=0.95, nan_thr=0.7, std_thr=0.1):
+def Edited_clean_data(x_train,y_train, x_test, correlation_thr=0.95, nan_thr=0.5, std_thr=0.1):
     """
     This function cleans the data by dropping columns and handling missing values.
     
@@ -304,7 +308,7 @@ def Edited_clean_data(x_train,y_train, x_test, correlation_thr=0.95, nan_thr=0.7
 
     # Standardize the data
     stand_X=standardize(clean_X)
-
+    
     
     
     # Check for correlation post processing
@@ -326,4 +330,6 @@ def Edited_clean_data(x_train,y_train, x_test, correlation_thr=0.95, nan_thr=0.7
     print("The cleaned x-data has the following shape: ",fi_x.shape)
     print("The cleaned y-data has the following shape: ",final_y.shape)
     print("The cleaned x-data-to-predict has the following shape: ",fi_x_toPred.shape)
+    
+    
     return fi_x,fi_x_toPred,final_y
