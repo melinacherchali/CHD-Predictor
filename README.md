@@ -1,4 +1,4 @@
-# Project 1 (CS-433): Predicting coronary heart disease likelihood
+# Project 1 (CS-433): Predicting coronary heart disease 
 
 This project is part of the Machine Learning Course (CS-433). Our objective is to predict the risk of heart attacks using data from over 300,000 individuals, leveraging binary classification techniques. The dataset is derived from the Behavioral Risk Factor Surveillance System (BRFSS) and includes various personal lifestyle and clinical features.
 
