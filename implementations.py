@@ -62,7 +62,7 @@ def ridge_regression(y, tx, lambda_):
     w = np.linalg.solve(a, b)
     return (w, compute_loss(y, tx, w))
 
-def logistic_regression(y, tx, initial_w, max_iters, gamma,losses_return = False):
+def logistic_regression(y, tx, initial_w, max_iters, gamma):
     """
     Perform logistic regression using gradient descent.
     Parameters:
@@ -75,20 +75,16 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma,losses_return = False
     w: final weight vector
     loss: final loss value
     """
-    
+
     w = initial_w
     loss = logistic_loss(y, tx, w)
-    losses=[loss]
     for i in range(max_iters):
         gradient = logistic_gradient(y, tx, w)
         w = w - gamma * gradient
         loss = logistic_loss(y, tx, w)
-        losses.append(loss)
-    if losses_return:
-        return w, loss, losses
-    return w, loss,
+    return w, loss
 
-def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma,return_losses=False):
+def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
     """
     Regularized logistic regression using gradient descent.
     Parameters:
@@ -105,16 +101,14 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma,return_l
     N = tx.shape[0]
     w = initial_w
     loss = logistic_loss(y, tx, w)
-    losses=[loss]
+
     for i in range(max_iters):
         gradient = penalized_logistic_regression(
             y, tx, w, lambda_
         )  # penality term included
         w = w - gamma * gradient
         loss = logistic_loss(y, tx, w)  # penality term not cinluded
-        losses.append(loss)
-    if return_losses:
-        return w, loss, losses
+
     return w, loss
 
 
@@ -132,7 +126,7 @@ def test_function(func):
     print(a[0], "MSE : ", a[1])
 
 def compute_loss(y, tx, w):
-    """Calculate the loss using MSE.
+    """Calculate the loss using either MSE or MAE.
 
     Args:
         y: numpy array of shape=(N, )
@@ -328,8 +322,6 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
 
 def sigmoid(t):
     sigmoid = 1 / (1 + np.exp(-t))
-    sigmoid = np.where(sigmoid==0,1e-10,sigmoid)
-    sigmoid = np.where(sigmoid==1,1-1e-10,sigmoid)
     return sigmoid
 
 def logistic_gradient(y, tx, w):
@@ -344,8 +336,12 @@ def penalized_logistic_regression(y, tx, w, lambda_):
 
 def logistic_loss(y, tx, w):
     N = tx.shape[0]
-    loss=(-1/ N* np.sum(y * np.log(sigmoid(tx @ w)) + (1 - y) * np.log(1 - sigmoid(tx @ w))))
-    return loss
+    return (
+        -1
+        / N
+        * np.sum(y * np.log(sigmoid(tx @ w)) + (1 - y) * np.log(1 - sigmoid(tx @ w)))
+    )
+
 
 
 
