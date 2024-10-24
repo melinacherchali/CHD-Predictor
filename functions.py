@@ -341,3 +341,22 @@ def best_threshold(y_pred,y):
     return optimal_threshold
 
 
+### Optimizer  ###
+
+def adam_optimizer(y, x, w, max_iters, gamma, beta1=0.9, beta2=0.999, epsilon=1e-8):
+    m, v = np.zeros_like(w), np.zeros_like(w)
+    for iter in range(max_iters):
+        # Compute predictions and gradients
+        predictions = imp.sigmoid(np.dot(x, w))
+        gradient = np.dot(x.T, predictions - y)
+
+        m = beta1 * m + (1 - beta1) * gradient
+        v = beta2 * v + (1 - beta2) * (gradient ** 2)
+
+        # Bias correction
+        m_hat = m / (1 - beta1 ** (iter + 1))
+        v_hat = v / (1 - beta2 ** (iter + 1))
+
+        # Update weights
+        w -= gamma * m_hat / (np.sqrt(v_hat) + epsilon)
+    return w
