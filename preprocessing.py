@@ -37,6 +37,17 @@ def standardize(data):
     return standardized_data
 
 
+def normalize(data):
+    """
+    This function normalizes the data.
+    """
+    assert np.isnan(data).sum() == 0, 'Data contains NaN values'
+    # Normalize the data
+    normalized_data = (data - np.min(data, axis=0)) / (np.max(data, axis=0) - np.min(data, axis=0))
+    
+    return normalized_data
+
+
 def is_column_binary(column):
     """
     This function checks if the columns are binary.
@@ -215,7 +226,9 @@ def drop_nan(x_train, y_train, x_test=None, nan_thr=.5):
     return x_train_clean , y_train_clean
 
 
+
 def final_clean_data(x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=0.5, std_thr=0.1):
+
     """
     This function cleans the data by dropping columns and handling missing values.
     
@@ -242,13 +255,29 @@ def final_clean_data(x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=
     # Handle missing values
     clean_X = replace_nan(x_wstd_wcor)
 
+    # Clip outliers at the specified percentiles
+    for col in range(clean_X.shape[1]):
+        lower_clip = np.percentile(clean_X[:, col], 5)
+        upper_clip = np.percentile(clean_X[:, col], 95)
+        clean_X[:, col] = np.clip(clean_X[:, col], lower_clip, upper_clip)
+    print(f"Data clipped between {5}th and {95}th percentiles")
+    
+    # drop columns with std < 0.1
+    std_devs = np.nanstd(clean_X, axis=0)                   # std, ignoring NaNs
+    low_std_mask = std_devs < std_thr                       # mask of columns with std < 0.1
+    columns_constant = np.unique(np.where(low_std_mask)[0]) # columns with std < 0.1, we keep only unique values
+    print(f"Number of columns with std < {std_thr} after cleaning:", columns_constant.shape[0])
+    clean_X = np.delete(clean_X, columns_constant, axis=1)
+
     # Standardize the data
     stand_X = standardize(clean_X)
+    # norm_X = normalize(clean_X)
     
     # Check for correlation post processing
     columns_correlated_f = correlation(stand_X, correlation_thr)
     print(f"Number of columns with corr_coef> {correlation_thr} after cleaning:", len(columns_correlated_f))
     final_X = np.delete(stand_X, columns_correlated_f, axis=1)
+    
     
     # Return the cleaned data by deconcatenating the x_train and x_test
     cleaned_x_train = final_X[:x_train.shape[0],:]
@@ -266,5 +295,6 @@ def final_clean_data(x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=
     
     
     return cleaned_x_train, cleaned_x_test, y_train
+
 
 
