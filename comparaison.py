@@ -26,8 +26,8 @@ def compare_csv(file1, file2):
 
 
 # Example usage
-file1 = "/Users/maelynenguyen/Desktop/MA1/ML-proj1/y_pred_adam_old.csv"
-file2 = "/Users/maelynenguyen/Desktop/MA1/ML-proj1/y_pred_CV.csv"
+file1 ='/Users/maelynenguyen/Desktop/MA1/ML-proj1/y_pred_adam25101206.csv'
+file2 = "/Users/maelynenguyen/Desktop/MA1/ML-proj1/y_pred_logg.csv"
 f1, accuracy = compare_csv(file1, file2)
 print(f"F1 Score: {f1}")
 print(f"Accuracy: {accuracy}")
