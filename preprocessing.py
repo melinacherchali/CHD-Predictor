@@ -226,7 +226,9 @@ def drop_nan(x_train, y_train, x_test=None, nan_thr=.5):
     return x_train_clean , y_train_clean
 
 
-def clean_data(x_train_, y_train_, x_test_, correlation_thr = 0.95, nan_thr = 0.5, std_thr = 0.1):
+
+def final_clean_data(x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=0.5, std_thr=0.1):
+
     """
     This function cleans the data by dropping columns and handling missing values.
     
