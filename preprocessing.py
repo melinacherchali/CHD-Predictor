@@ -174,7 +174,7 @@ def drop_nan(x_train, y_train, x_test=None, nan_thr=.5):
     This function drops the rows and columns with NaN values above a certain threshold.
     The criterion is computed, for each item of the array by taking the square root of the product of the NaN ratio of the row and column.
     Criterion: NaN_score(i,j) = sqrt(NaN_ratio_row(i) * NaN_ratio_col(j))
-    All the rows and columns having a single computed NaN score above the threshold are dropped.
+    All the rows and columns having a median NaN score above the threshold are dropped.
     
     arguments:
     data_x: the input data
@@ -262,7 +262,7 @@ def final_clean_data(x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=
         clean_X[:, col] = np.clip(clean_X[:, col], lower_clip, upper_clip)
     print(f"Data clipped between {5}th and {95}th percentiles")
     
-    # drop columns with std < 0.1
+    # drop columns with std < std_thr after nan replacement
     std_devs = np.nanstd(clean_X, axis=0)                   # std, ignoring NaNs
     low_std_mask = std_devs < std_thr                       # mask of columns with std < 0.1
     columns_constant = np.unique(np.where(low_std_mask)[0]) # columns with std < 0.1, we keep only unique values
