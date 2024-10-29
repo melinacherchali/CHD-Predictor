@@ -30,8 +30,6 @@ plt.matshow(dual_ratios[::600,:].T,cmap="plasma")
 plt.xlabel("Rapresentative rows")
 plt.ylabel("Predictors")
 plt.colorbar(label=r"$\sigma_{i,j}$")
-plt.legend()
-plt.tight_layout()
 plt.show()
 
 
