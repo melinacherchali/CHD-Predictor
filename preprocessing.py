@@ -226,9 +226,7 @@ def drop_nan(x_train, y_train, x_test=None, nan_thr=.5):
     return x_train_clean , y_train_clean
 
 
-
-def final_clean_data(x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=0.5, std_thr=0.1):
-
+def clean_data_final(x_train_, y_train_, x_test_, correlation_thr = 0.95, nan_thr = 0.5, std_thr = 0.1):
     """
     This function cleans the data by dropping columns and handling missing values.
     
@@ -296,5 +294,252 @@ def final_clean_data(x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=
     
     return cleaned_x_train, cleaned_x_test, y_train
 
+
+
+def index_remplace_9 (x_train_features):
+    _CHISPNC = x_train_features.index('_CHISPNC')
+    _RFHYPE5 = x_train_features.index('_RFHYPE5')
+    _HCVU651 = x_train_features.index('_HCVU651')
+    _CHOLCHK = x_train_features.index('_CHOLCHK')
+    _RFCHOL = x_train_features.index('_RFCHOL')
+    _LTASTH1 = x_train_features.index('_LTASTH1')
+    _CASTHM1 = x_train_features.index('_CASTHM1')
+    _ASTHMS1 = x_train_features.index('_ASTHMS1')
+    _RACE = x_train_features.index('_RACE')
+    _RACEG21 = x_train_features.index('_RACEG21')
+    _RACEGR3 = x_train_features.index('_RACEGR3')
+    WTKG3 = x_train_features.index('WTKG3')
+    _RFBMI5 = x_train_features.index('_RFBMI5')
+    _CHLDCNT = x_train_features.index('_CHLDCNT')
+    _EDUCAG = x_train_features.index('_EDUCAG')
+
+    _INCOMG = x_train_features.index('_INCOMG')
+    _SMOKER3 = x_train_features.index('_SMOKER3')
+    _RFSMOK3 = x_train_features.index('_RFSMOK3')
+    _RFBING5 = x_train_features.index('_RFBING5')
+    _RFDRHV5 = x_train_features.index('_RFDRHV5')
+    _TOTINDA = x_train_features.index('_TOTINDA')
+    _PAMISS1_ = x_train_features.index('PAMISS1_')
+    _PACAT1 = x_train_features.index('_PACAT1')
+    _PAINDX1 = x_train_features.index('_PAINDX1')
+    _PA150R2 = x_train_features.index('_PA150R2')
+    _PA300R2 = x_train_features.index('_PA300R2')
+    _PA30021 = x_train_features.index('_PA30021')
+    _PASTRNG = x_train_features.index('_PASTRNG')
+    _PAREC1 = x_train_features.index('_PAREC1')
+    _PASTAE1 = x_train_features.index('_PASTAE1')
+    _RFSEAT2 = x_train_features.index('_RFSEAT2')
+    _RFSEAT3 = x_train_features.index('_RFSEAT3')
+    _FLSHOT6 = x_train_features.index('_FLSHOT6')
+    _PNEUMO2 = x_train_features.index('_PNEUMO2')
+    _AIDTST3 = x_train_features.index('_AIDTST3')
+
+    list_index_remplace_9 = [
+        _CHISPNC, _RFHYPE5, _HCVU651, _CHOLCHK, _RFCHOL, _LTASTH1, _CASTHM1, _ASTHMS1, _RACE, _RACEG21, _RACEGR3, WTKG3, 
+        _RFBMI5, _CHLDCNT, _EDUCAG, _INCOMG, _SMOKER3, _RFSMOK3, _RFBING5, _RFDRHV5, _TOTINDA, _PAMISS1_, _PACAT1, _PAINDX1, 
+        _PA150R2, _PA300R2, _PA30021, _PASTRNG, _PAREC1, _PASTAE1, _RFSEAT2, _RFSEAT3, _FLSHOT6, _PNEUMO2, _AIDTST3
+    ]
+    return list_index_remplace_9
+
+def index_remplace_7(x_train_features):
+    LANDLINE = x_train_features.index('LANDLINE')
+    HHADULT = x_train_features.index('HHADULT')
+    GENHLTH = x_train_features.index('GENHLTH')
+    HLTHPLN1 = x_train_features.index('HLTHPLN1')
+    PERSDOC2 = x_train_features.index('PERSDOC2')
+    MEDCOST = x_train_features.index('MEDCOST')
+    CHECKUP1 = x_train_features.index('CHECKUP1')
+    BPHIGH4 = x_train_features.index('BPHIGH4')
+    BPMEDS = x_train_features.index('BPMEDS')
+    BLOODCHO = x_train_features.index('BLOODCHO')
+    CHOLCHK = x_train_features.index('CHOLCHK')
+    TOLDHI2 = x_train_features.index('TOLDHI2')
+    CVDSTRK3 = x_train_features.index('CVDSTRK3')
+    ASTHMA3 = x_train_features.index('ASTHMA3')
+    ASTHNOW = x_train_features.index('ASTHNOW')
+    CHCSCNCR = x_train_features.index('CHCSCNCR')
+    CHCOCNCR = x_train_features.index('CHCOCNCR')
+    CHCCOPD1 = x_train_features.index('CHCCOPD1')
+    HAVARTH3 = x_train_features.index('HAVARTH3')
+    ADDEPEV2 = x_train_features.index('ADDEPEV2')
+    CHCKIDNY = x_train_features.index('CHCKIDNY')
+    DIABETE3 = x_train_features.index('DIABETE3')
+    RENTHOM1 = x_train_features.index('RENTHOM1')
+    NUMHHOL2 = x_train_features.index('NUMHHOL2')
+    NUMPHON2 = x_train_features.index('NUMPHON2')
+    CPDEMO1 = x_train_features.index('CPDEMO1')
+    VETERAN3 = x_train_features.index('VETERAN3')
+    INTERNET = x_train_features.index('INTERNET')
+    PREGNANT = x_train_features.index('PREGNANT') # 7 don't know
+    QLACTLM2 = x_train_features.index('QLACTLM2') # 7 don't know
+    USEEQUIP = x_train_features.index('USEEQUIP') # 7 don't know
+    BLIND = x_train_features.index('BLIND') # 7 don't know
+    DECIDE = x_train_features.index('DECIDE') # 7 don't know
+
+    DIFFWALK = x_train_features.index('DIFFWALK') # 7 don't know
+    DIFFDRES = x_train_features.index('DIFFDRES') # 7 don't know
+
+    DIFFALON = x_train_features.index('DIFFALON') # 7 don't know
+    SMOKE100 = x_train_features.index('SMOKE100') # 7 don't know
+    SMOKDAY2 = x_train_features.index('SMOKDAY2') # 7 don't know
+    STOPSMK2 = x_train_features.index('STOPSMK2') # 7 don't know
+    USENOW3 = x_train_features.index('USENOW3') # 7 don't know
+    EXERANY2 = x_train_features.index('EXERANY2') # 7 don't know
+    LMTJOIN3 = x_train_features.index('LMTJOIN3') # 7 don't know
+    ARTHDIS2 = x_train_features.index('ARTHDIS2') # 7 don't know
+    ARTHSOCL = x_train_features.index('ARTHSOCL') # 7 don't know
+    SEATBELT = x_train_features.index('SEATBELT') # 7 don't know
+    FLUSHOT6 = x_train_features.index('FLUSHOT6') # 7 don't know
+    PNEUVAC3 = x_train_features.index('PNEUVAC3') # 7 don't know
+    HIVTST6 = x_train_features.index('HIVTST6') # 7 don't know
+    PDIABTST = x_train_features.index('PDIABTST') # 7 don't know
+    PREDIAB1 = x_train_features.index('PREDIAB1') # 7 don't know
+    FEETCHK2 = x_train_features.index('FEETCHK2') # 7 don't know
+
+
+    EYEEXAM = x_train_features.index('EYEEXAM') # 7 don't know
+    DIABEYE = x_train_features.index('DIABEYE') # 7 don't know
+    DIABEDU = x_train_features.index('DIABEDU') # 7 don't know
+    CAREGIV1 = x_train_features.index('CAREGIV1') # 7 don't know
+    CRGVLNG1 =  x_train_features.index('CRGVLNG1') # 7 don't know
+    CRGVHRS1 = x_train_features.index('CRGVHRS1') # 7 don't know
+
+    CRGVPERS = x_train_features.index('CRGVPERS') # 7 don't know
+    CRGVHOUS = x_train_features.index('CRGVHOUS') # 7 don't know
+    CRGVMST2 = x_train_features.index('CRGVMST2') # 7 don't know
+    CRGVEXPT = x_train_features.index('CRGVEXPT') # 7 don't know
+
+    VIDFCLT2 = x_train_features.index('VIDFCLT2') # 7 don't know
+    VIREDIF3 = x_train_features.index('VIREDIF3') # 7 don't know
+    VIPRFVS2 = x_train_features.index('VIPRFVS2') # 7 don't know
+    VIEYEXM2 = x_train_features.index('VIEYEXM2') # 7 don't know
+    VIINSUR2 = x_train_features.index('VIINSUR2') # 7 don't know
+    VICTRCT4 = x_train_features.index('VICTRCT4') # 7 don't know
+    VIGLUMA2 = x_train_features.index('VIGLUMA2') # 7 don't know
+    VIMACDG2 = x_train_features.index('VIMACDG2') # 7 don't know
+    CIMEMLOS = x_train_features.index('CIMEMLOS') # 7 don't know
+    CDHOUSE = x_train_features.index('CDHOUSE') # 7 don't know
+    CDASSIST = x_train_features.index('CDASSIST') # 7 don't know
+    CDHELP = x_train_features.index('CDHELP') # 7 don't know
+    CDSOCIAL = x_train_features.index('CDSOCIAL') # 7 don't know
+    CDDISCUS = x_train_features.index('CDDISCUS') # 7 don't know
+    WTCHSALT = x_train_features.index('WTCHSALT') # 7 don't know
+    ASYMPTOM = x_train_features.index('ASYMPTOM') # 7 don't know
+    ASNOSLEP = x_train_features.index('ASNOSLEP') # 7 don't know
+    ASTHMED3 = x_train_features.index('ASTHMED3') # 7 don't know
+    ASINHALR = x_train_features.index('ASINHALR') # 7 don't know
+    HAREHAB1 = x_train_features.index('HAREHAB1') # 7 don't know
+    STREHAB1 = x_train_features.index('STREHAB1') # 7 don't know
+    CVDASPRN = x_train_features.index('CVDASPRN') # 7 don't know
+    ASPUNSAF = x_train_features.index('ASPUNSAF') # 7 don't know
+    RLIVPAIN = x_train_features.index('RLIVPAIN') # 7 don't know
+    RDUCHART = x_train_features.index('RDUCHART') # 7 don't know
+    RDUCSTRK = x_train_features.index('RDUCSTRK') # 7 don't know
+    ARTTODAY = x_train_features.index('ARTTODAY') # 7 don't know
+    ARTHWGT = x_train_features.index('ARTHWGT') # 7 don't know
+    ARTHEXER = x_train_features.index('ARTHEXER') # 7 don't know
+    ARTHEDU = x_train_features.index('ARTHEDU') # 7 don't know
+    TETANUS = x_train_features.index('TETANUS') # 7 don't know
+    HPVADVC2 = x_train_features.index('HPVADVC2') # 7 don't know
+    SHINGLE2 = x_train_features.index('SHINGLE2') # 7 don't know
+    HADMAM = x_train_features.index('HADMAM') # 7 don't know
+    HOWLONG = x_train_features.index('HOWLONG') # 7 don't know
+    HADPAP2 = x_train_features.index('HADPAP2') # 7 don't know
+    LASTPAP2 = x_train_features.index('LASTPAP2') # 7 don't know
+    HPVTEST = x_train_features.index('HPVTEST') # 7 don't know
+    HPLSTTST = x_train_features.index('HPLSTTST') # 7 don't know
+    HADHYST2 = x_train_features.index('HADHYST2') # 7 don't know
+    PROFEXAM = x_train_features.index('PROFEXAM') # 7 don't know
+    LENGEXAM = x_train_features.index('LENGEXAM') # 7 don't know
+    BLDSTOOL = x_train_features.index('BLDSTOOL') # 7 don't know
+    LSTBLDS3  = x_train_features.index('LSTBLDS3') # 7 don't know
+    HADSIGM3 = x_train_features.index('HADSIGM3') # 7 don't know
+    HADSGCO1 = x_train_features.index('HADSGCO1') # 7 don't know
+    LASTSIG3 = x_train_features.index('LASTSIG3') # 7 don't know
+    PCPSAAD2 = x_train_features.index('PCPSAAD2') # 7 don't know
+    PCPSADI1 = x_train_features.index('PCPSADI1') # 7 don't know
+    PCPSARE1 = x_train_features.index('PCPSARE1') # 7 don't know
+    PSATEST1 = x_train_features.index('PSATEST1') # 7 don't know
+
+    DRADVISE = x_train_features.index('DRADVISE') # 7 don't know
+    ASATTACK = x_train_features.index('ASATTACK') # 7 don't know
+
+    PSATIME = x_train_features.index('PSATIME') # 7 don't know
+    PCPSARS1 = x_train_features.index('PCPSARS1') # 7 don't know
+    PCDMDECN = x_train_features.index('PCDMDECN') # 7 don't know
+    SCNTMNY1 = x_train_features.index('SCNTMNY1') # 7 don't know
+    SCNTMEL1 = x_train_features.index('SCNTMEL1') # 7 don't know
+    SCNTPAID = x_train_features.index('SCNTPAID') # 7 don't know
+    SCNTLPAD = x_train_features.index('SCNTLPAD') # 7 don't know
+
+
+    SXORIENT = x_train_features.index('SXORIENT') # 7 don't know
+    TRNSGNDR = x_train_features.index('TRNSGNDR') # 7 don't know
+    RCSRLTN2 = x_train_features.index('RCSRLTN2') # 7 don't know
+    CASTHDX2 = x_train_features.index('CASTHDX2') # 7 don't know
+    CASTHNO2  = x_train_features.index('CASTHNO2') # 7 don't know
+    EMTSUPRT = x_train_features.index('EMTSUPRT') # 7 don't know
+    LSATISFY = x_train_features.index('LSATISFY') # 7 don't know
+
+    MISTMNT = x_train_features.index('MISTMNT') # 7 don't know
+    ADANXEV = x_train_features.index('ADANXEV') # 7 don't know
+
+    list_index_remplace_7 = [
+        LANDLINE, HHADULT, GENHLTH, HLTHPLN1, PERSDOC2, MEDCOST, CHECKUP1, BPHIGH4, BPMEDS, BLOODCHO, 
+        CHOLCHK, TOLDHI2, CVDSTRK3, ASTHMA3, ASTHNOW, CHCSCNCR, CHCOCNCR, CHCCOPD1, 
+        HAVARTH3, ADDEPEV2, CHCKIDNY, DIABETE3, RENTHOM1, NUMHHOL2, NUMPHON2, CPDEMO1, VETERAN3, INTERNET, 
+        PREGNANT, QLACTLM2, USEEQUIP, BLIND, DECIDE, DIFFWALK, DIFFDRES, DIFFALON, SMOKE100, SMOKDAY2, 
+        STOPSMK2, USENOW3, EXERANY2, LMTJOIN3, ARTHDIS2, ARTHSOCL, SEATBELT, FLUSHOT6, PNEUVAC3, HIVTST6, 
+        PDIABTST, PREDIAB1, FEETCHK2, EYEEXAM, DIABEYE, DIABEDU, CAREGIV1, CRGVLNG1, CRGVHRS1, CRGVPERS, 
+        CRGVHOUS, CRGVMST2, CRGVEXPT, VIDFCLT2, VIREDIF3, VIPRFVS2, VIEYEXM2, VIINSUR2, VICTRCT4, VIGLUMA2, 
+        VIMACDG2, CIMEMLOS, CDHOUSE, CDASSIST, CDHELP, CDSOCIAL, CDDISCUS, WTCHSALT, ASYMPTOM, ASNOSLEP, 
+        ASTHMED3, ASINHALR, HAREHAB1, STREHAB1, CVDASPRN, ASPUNSAF, RLIVPAIN, RDUCHART, RDUCSTRK, ARTTODAY, 
+        ARTHWGT, ARTHEXER, ARTHEDU, TETANUS, HPVADVC2, SHINGLE2, HADMAM, HOWLONG, HADPAP2, LASTPAP2, 
+        HPVTEST, HPLSTTST, HADHYST2, PROFEXAM, LENGEXAM, BLDSTOOL, LSTBLDS3, HADSIGM3, HADSGCO1, LASTSIG3, 
+        PCPSAAD2, PCPSADI1, PCPSARE1, PSATEST1, DRADVISE, ASATTACK, PSATIME, PCPSARS1, PCDMDECN, SCNTMNY1, 
+        SCNTMEL1, SCNTPAID, SCNTLPAD, SXORIENT, TRNSGNDR, RCSRLTN2, CASTHDX2, CASTHNO2, EMTSUPRT, LSATISFY, 
+        MISTMNT, ADANXEV
+    ]
+    return list_index_remplace_7
+
+def index_remplace_77(x_train_features):
+    # 77 is don't know
+    PHYSHLTH = x_train_features.index('PHYSHLTH') #77 don't know 
+    MENTHLTH = x_train_features.index('MENTHLTH') #77 don't know
+    POORHLTH = x_train_features.index('POORHLTH') #77 don't know
+    INCOME2 = x_train_features.index('INCOME2') # 77 don't know 
+    LASTSMK2 = x_train_features.index('LASTSMK2') # 77 don't know
+    AVEDRNK2 = x_train_features.index('AVEDRNK2') # 77 don't know
+    DRNK3GE5 = x_train_features.index('DRNK3GE5') # 77 don't know
+    MAXDRNKS = x_train_features.index('MAXDRNKS') # 77 don't know
+    EXRACT11 = x_train_features.index('EXRACT11') # 77 don't know
+    EXRACT21 = x_train_features.index('EXRACT21') # 77 don't know
+    JOINPAIN = x_train_features.index('JOINPAIN') # 77 don't know
+    IMFVPLAC = x_train_features.index('IMFVPLAC') # 77 don't know
+    DOCTDIAB = x_train_features.index('DOCTDIAB') # 77 don't know
+    CHKHEMO3 = x_train_features.index('CHKHEMO3') # 77 don't know
+    FEETCHK = x_train_features.index('FEETCHK') # 77 don't know
+    CRGVPRB1 = x_train_features.index('CRGVPRB1') # 77 don't know
+    VINOCRE2 = x_train_features.index('VINOCRE2') # 77 don't know
+    HPVADSHT = x_train_features.index('HPVADSHT') # 77 don't know
+    ADPLEASR = x_train_features.index('ADPLEASR') # 77 don't know
+    ADDOWN = x_train_features.index('ADDOWN') # 77 don't know
+    ADSLEEP = x_train_features.index('ADSLEEP') # 77 don't know
+    ADENERGY = x_train_features.index('ADENERGY') # 77 don't know
+    ADEAT1 = x_train_features.index('ADEAT1') # 77 don't know
+    ADFAIL = x_train_features.index('ADFAIL') # 77 don't know
+    ADTHINK = x_train_features.index('ADTHINK') # 77 don't know
+    ADMOVE = x_train_features.index('ADMOVE') # 77 don't know
+
+    list_index_remplace_77 = [PHYSHLTH, MENTHLTH, POORHLTH, INCOME2, LASTSMK2, AVEDRNK2, DRNK3GE5, MAXDRNKS, EXRACT11, EXRACT21,
+                        JOINPAIN, IMFVPLAC, DOCTDIAB, CHKHEMO3, FEETCHK, CRGVPRB1, VINOCRE2, HPVADSHT, ADPLEASR,
+                        ADDOWN, ADSLEEP, ADENERGY, ADEAT1, ADFAIL, ADTHINK, ADMOVE]
+    return list_index_remplace_77
+
+def remplace(list_index,x_train,x_test):
+    for (index) in (list_index):
+        x_train[:, index-1] = np.where(x_train[:, index-1] == 9, np.nan, x_train[:, index-1]) 
+        x_test[:, index-1] = np.where(x_test[:, index-1] == 9, np.nan, x_test[:, index-1]) 
+    return x_train, x_test
 
 
