@@ -13,6 +13,7 @@ def test_function(func):
     a = func(y, tx, initial_w, max_iters, gamma)
     print(a[0], "MSE : ", a[1])
 
+
 def compute_loss(y, tx, w):
     """Calculate the loss using MSE.
 
@@ -27,7 +28,6 @@ def compute_loss(y, tx, w):
     N = np.shape(y)[0]
     e = y - np.dot(tx, w)
     return 1 / (2 * N) * (e.T.dot(e))
-
 
 
 ### Gradient Descent ###
@@ -49,6 +49,7 @@ def compute_gradient(y, tx, w):
     e = y - np.dot(tx, w)
     grad = -1 / N * np.dot(tx.T, e)
     return grad
+
 
 def gradient_descent(y, tx, initial_w, max_iters, gamma):
     """The Gradient Descent (GD) algorithm.
@@ -83,7 +84,6 @@ def gradient_descent(y, tx, initial_w, max_iters, gamma):
         # )
 
     return ws, losses
-
 
 
 ### Stochastic Gradient Descent ###
@@ -124,6 +124,7 @@ def stochastic_gradient_descent(y, tx, initial_w, max_iters, gamma, batch_size=1
         # )
     return ws, losses
 
+
 def compute_stoch_gradient(y, tx, w, batch_size=1):
     """Compute a stochastic gradient at w from a data sample batch of size B, where B < N, and their corresponding labels.
 
@@ -141,6 +142,7 @@ def compute_stoch_gradient(y, tx, w, batch_size=1):
         axis=0,
     )
     return gradient
+
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     """
@@ -202,36 +204,41 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
         yield y[start_index:end_index], tx[start_index:end_index]
 
 
-
 ### Logistic Regression ###
 
 
 def sigmoid(t):
     sigmoid = 1 / (1 + np.exp(-t))
-    sigmoid = np.where(sigmoid==0,1e-10,sigmoid)
-    sigmoid = np.where(sigmoid==1,1-1e-10,sigmoid)
+    sigmoid = np.where(sigmoid == 0, 1e-10, sigmoid)
+    sigmoid = np.where(sigmoid == 1, 1 - 1e-10, sigmoid)
     return sigmoid
+
 
 def logistic_gradient(y, tx, w):
     y_pred = sigmoid(tx @ w)
     gradient = np.dot(tx.T, y_pred - y) / y.shape[0]
     return gradient
 
+
 def penalized_logistic_regression(y, tx, w, lambda_):
     N = y.shape[0]
     gradient = logistic_gradient(y, tx, w) + lambda_ * 2 * w  # penalized gradient
     return gradient
 
+
 def logistic_loss(y, tx, w):
     """
-        y : binary label (0,1)
-        tx : features
-        w : weights  
+    y : binary label (0,1)
+    tx : features
+    w : weights
     """
     N = tx.shape[0]
-    loss=(-1/ N* np.sum(y * np.log(sigmoid(tx @ w)) + (1 - y) * np.log(1 - sigmoid(tx @ w))))
+    loss = (
+        -1
+        / N
+        * np.sum(y * np.log(sigmoid(tx @ w)) + (1 - y) * np.log(1 - sigmoid(tx @ w)))
+    )
     return loss
-
 
 
 ### Evaluation ###
@@ -244,30 +251,35 @@ def f1_score_(y_true, y_pred):
     # Validate input
     if len(y_true) != len(y_pred):
         raise ValueError("The length of y_true and y_pred must be the same.")
-    
+
     # Map -1 to 0 for binary classification
     y_true = np.where(y_true == -1, 0, 1)
     y_pred = np.where(y_pred == -1, 0, 1)
 
     # True Positives (TP): Both predicted and actual are positive (1)
     TP = np.sum((y_true == 1) & (y_pred == 1))
-    
+
     # False Positives (FP): Predicted positive (1) but actual negative (0)
     FP = np.sum((y_true == 0) & (y_pred == 1))
-    
+
     # False Negatives (FN): Predicted negative (0) but actual positive (1)
     FN = np.sum((y_true == 1) & (y_pred == 0))
-    
+
     # Precision: TP / (TP + FP)
     precision = TP / (TP + FP) if (TP + FP) > 0 else 0.0
-    
+
     # Recall: TP / (TP + FN)
     recall = TP / (TP + FN) if (TP + FN) > 0 else 0.0
-    
+
     # F1 Score: 2 * (Precision * Recall) / (Precision + Recall)
-    f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
-    
+    f1_score = (
+        2 * (precision * recall) / (precision + recall)
+        if (precision + recall) > 0
+        else 0.0
+    )
+
     return f1_score
+
 
 def k_fold_split(x, y, k):
     """Utility function to split data into k folds."""
@@ -275,39 +287,46 @@ def k_fold_split(x, y, k):
     np.random.shuffle(indices)
     fold_size = len(y) // k
     folds = []
-    
+
     for i in range(k):
-        test_indices = indices[i * fold_size: (i + 1) * fold_size]
-        train_indices = np.concatenate((indices[:i * fold_size], indices[(i + 1) * fold_size:]))
+        test_indices = indices[i * fold_size : (i + 1) * fold_size]
+        train_indices = np.concatenate(
+            (indices[: i * fold_size], indices[(i + 1) * fold_size :])
+        )
         folds.append((train_indices, test_indices))
-    
+
     return folds
-    
-def grid_search_logistic_regression(y_train, x_train_cleaned, param_grid, w_initial, k=5):
+
+
+def grid_search_logistic_regression(
+    y_train, x_train_cleaned, param_grid, w_initial, k=5
+):
     best_params = None
     best_score = float("inf")
     best_w = w_initial
     losses = []
-        
+
     # Generate folds for cross-validation
     folds = k_fold_split(x_train_cleaned, y_train, k)
 
     # Iterate over each combination of parameters
     for max_iters in param_grid["max_iters"]:
         for gamma in param_grid["gamma"]:
-            total_loss = 0    
+            total_loss = 0
             # Perform k-fold cross-validation
             for train_indices, test_indices in folds:
                 x_train_fold = x_train_cleaned[train_indices]
                 y_train_fold = y_train[train_indices]
                 x_test_fold = x_train_cleaned[test_indices]
                 y_test_fold = y_train[test_indices]
-                
+
                 # Train the model with training data
-                w, _ = imp.logistic_regression(y_train_fold, x_train_fold, w_initial, max_iters, gamma)
+                w, _ = imp.logistic_regression(
+                    y_train_fold, x_train_fold, w_initial, max_iters, gamma
+                )
                 # Test the model with testing data
                 loss = imp.logistic_loss(y_test_fold, x_test_fold, w)
-                
+
                 total_loss += loss
 
             avg_loss = total_loss / k
@@ -324,9 +343,60 @@ def grid_search_logistic_regression(y_train, x_train_cleaned, param_grid, w_init
 
     return best_w, best_params, losses
 
-def best_threshold(y_pred,y):
-    """ y : binary (-1,1) 
-        y_pred : binary (0,1)
+
+def grid_search_reg_logistic_regression(
+    y_train, x_train_cleaned, param_grid, w_initial, k=5
+):
+    best_params = None
+    best_score = float("inf")
+    best_w = w_initial
+    losses = []
+
+    # Generate folds for cross-validation
+    folds = k_fold_split(x_train_cleaned, y_train, k)
+
+    # Iterate over each combination of parameters
+    for max_iters in param_grid["max_iters"]:
+        for gamma in param_grid["gamma"]:
+            for lambda_ in param_grid["lambda_"]:
+                total_loss = 0
+                # Perform k-fold cross-validation
+                for train_indices, test_indices in folds:
+                    x_train_fold = x_train_cleaned[train_indices]
+                    y_train_fold = y_train[train_indices]
+                    x_test_fold = x_train_cleaned[test_indices]
+                    y_test_fold = y_train[test_indices]
+
+                    # Train the model with training data
+                    w, _ = imp.reg_logistic_regression(
+                        y_train_fold, x_train_fold, lambda_, w_initial, max_iters, gamma
+                    )
+                    # Test the model with testing data
+                    loss = imp.logistic_loss(y_test_fold, x_test_fold, w)
+
+                    total_loss += loss
+
+                avg_loss = total_loss / k
+                losses.append((max_iters, gamma, lambda_, avg_loss))
+                print(
+                    f"Max Iters: {max_iters}, Gamma: {gamma}, Lambda: {lambda_}, Avg Loss: {avg_loss}"
+                )
+
+                if avg_loss < best_score:
+                    best_score = avg_loss
+                    best_w = w
+                    best_params = {
+                        "max_iters": max_iters,
+                        "gamma": gamma,
+                        "lambda_": lambda_,
+                    }
+
+    return best_w, best_params, losses
+
+
+def best_threshold(y_pred, y):
+    """y : binary (-1,1)
+    y_pred : binary (0,1)
     """
     thresholds = np.arange(0.0, 1.0, 0.01)
     f1_scores = []
@@ -343,6 +413,7 @@ def best_threshold(y_pred,y):
 
 ### Optimizer  ###
 
+
 def adam_optimizer(y, x, w, max_iters, gamma, beta1=0.9, beta2=0.999, epsilon=1e-8):
     m, v = np.zeros_like(w), np.zeros_like(w)
     for iter in range(max_iters):
@@ -351,7 +422,7 @@ def adam_optimizer(y, x, w, max_iters, gamma, beta1=0.9, beta2=0.999, epsilon=1e
         gradient = np.dot(x.T, predictions - y)
 
         m = beta1 * m + (1 - beta1) * gradient
-        v = beta2 * v + (1 - beta2) * (gradient ** 2)
+        v = beta2 * v + (1 - beta2) * (gradient**2)
 
         # Bias correction
         m_hat = m / (1 - beta1 ** (iter + 1))

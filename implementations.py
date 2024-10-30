@@ -5,6 +5,7 @@ from functions import *
 
 ### Required functions ###
 
+
 def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     """
     Args:
@@ -22,6 +23,7 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     ws, losses = gradient_descent(y, tx, initial_w, max_iters, gamma)
     return ws[-1], losses[-1]  # return the last weight and loss
 
+
 def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     """
     Compute the mean squared error using stochastic gradient descent.
@@ -34,9 +36,10 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     Returns:
     tuple: A tuple containing the last weight and the last loss.
     """
-   
-    ws, losses = stochastic_gradient_descent(y, tx, initial_w, max_iters, gamma) 
-    return ws[-1], losses[-1] # return the last weight and loss
+
+    ws, losses = stochastic_gradient_descent(y, tx, initial_w, max_iters, gamma)
+    return ws[-1], losses[-1]  # return the last weight and loss
+
 
 def least_squares(y, tx):
     """
@@ -46,6 +49,7 @@ def least_squares(y, tx):
     """
     w = np.linalg.solve(tx.T.dot(tx), tx.T.dot(y))
     return (w, compute_loss(y, tx, w))
+
 
 def ridge_regression(y, tx, lambda_):
     """
@@ -61,7 +65,8 @@ def ridge_regression(y, tx, lambda_):
     w = np.linalg.solve(a, b)
     return (w, compute_loss(y, tx, w))
 
-def logistic_regression(y, tx, initial_w, max_iters, gamma, losses_return = False):
+
+def logistic_regression(y, tx, initial_w, max_iters, gamma, losses_return=False):
     """
     Perform logistic regression using gradient descent.
     Parameters:
@@ -74,10 +79,10 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma, losses_return = Fals
     w: final weight vector
     loss: final loss value
     """
-    
+
     w = initial_w
     loss = logistic_loss(y, tx, w)
-    losses=[loss]
+    losses = [loss]
     for i in range(max_iters):
         gradient = logistic_gradient(y, tx, w)
         w = w - gamma * gradient
@@ -85,9 +90,15 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma, losses_return = Fals
         losses.append(loss)
     if losses_return:
         return w, loss, losses
-    return w, loss,
+    return (
+        w,
+        loss,
+    )
 
-def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma, return_losses=False):
+
+def reg_logistic_regression(
+    y, tx, lambda_, initial_w, max_iters, gamma, return_losses=False
+):
     """
     Regularized logistic regression using gradient descent.
     Parameters:
@@ -104,7 +115,7 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma, return_
     N = tx.shape[0]
     w = initial_w
     loss = logistic_loss(y, tx, w)
-    losses=[loss]
+    losses = [loss]
     for i in range(max_iters):
         gradient = penalized_logistic_regression(
             y, tx, w, lambda_
@@ -115,5 +126,3 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma, return_
     if return_losses:
         return w, loss, losses
     return w, loss
-
-
