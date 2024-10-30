@@ -336,8 +336,7 @@ def clean_data_final(
 
 
 def index_replace_9(x_train_features):
-    # Define a list of feature names for replacement
-    features_9 = [
+    feature_names = [
         "_CHISPNC",
         "_RFHYPE5",
         "_HCVU651",
@@ -375,21 +374,15 @@ def index_replace_9(x_train_features):
         "_AIDTST3",
     ]
 
-    # Retrieve indices of features dynamically
-    list_index_replace_9 = [x_train_features.index(feature) for feature in features_9]
+    list_index_replace_9 = [
+        x_train_features.index(feature) for feature in feature_names
+    ]
+
     return list_index_replace_9
 
 
 def index_replace_7(x_train_features):
-    """
-    Returns a list of indices corresponding to the feature names in `x_train_features` that are present in the `feature_names` list.
-    Parameters:
-    - x_train_features (list): A list of feature names.
-    Returns:
-    - list: A list of indices corresponding to the feature names in `x_train_features` that are present in the `feature_names` list.
-    """
-
-    feature_7 = [
+    feature_names = [
         "LANDLINE",
         "HHADULT",
         "GENHLTH",
@@ -522,7 +515,11 @@ def index_replace_7(x_train_features):
         "ADANXEV",
     ]
 
-    list_index_replace_7 = [x_train_features.index(feature) for feature in feature_7]
+    list_index_replace_7 = [
+        x_train_features.index(name)
+        for name in feature_names
+        if name in x_train_features
+    ]
 
     return list_index_replace_7
 
