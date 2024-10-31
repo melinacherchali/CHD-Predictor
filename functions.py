@@ -243,6 +243,26 @@ def logistic_loss(y, tx, w):
 
 ### Evaluation ###
 
+def accuracy_score_(y_true, y_pred):
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+
+    # Validate input
+    if len(y_true) != len(y_pred):
+        raise ValueError("The length of y_true and y_pred must be the same.")
+
+    # Map -1 to 0 for binary classification
+    y_true = np.where(y_true == -1, 0, 1)
+    y_pred = np.where(y_pred == -1, 0, 1)
+
+    # Correct predictions
+    correct_predictions = np.sum(y_true == y_pred)
+
+    # Accuracy: Correct predictions / Total predictions
+    accuracy = correct_predictions / len(y_true)
+
+    return accuracy
+
 
 def f1_score_(y_true, y_pred):
     y_true = np.array(y_true)
@@ -296,6 +316,134 @@ def k_fold_split(x, y, k):
         folds.append((train_indices, test_indices))
 
     return folds
+
+
+def grid_search_gd(y_train, x_train, param_grid, w_initial, k=5):
+    best_params = None
+    best_score = float("inf")
+    best_w = w_initial
+    losses = []
+    
+    # Generate folds for cross-validation
+    folds = k_fold_split(x_train, y_train, k)
+    
+    # Iterate over each combination of parameters
+    for max_iters in param_grid["max_iters"]:
+        for gamma in param_grid["gamma"]:
+            total_loss = 0
+            # Perform k-fold cross-validation
+            for train_indices, test_indices in folds:
+                x_train_fold = x_train[train_indices]
+                y_train_fold = y_train[train_indices]
+                x_test_fold = x_train[test_indices]
+                y_test_fold = y_train[test_indices]
+                
+                # Train the model with training data
+                w, _ = imp.mean_squared_error_gd(y_train_fold, x_train_fold, w_initial, max_iters, gamma)
+                # Test the model with testing data
+                loss = imp.compute_loss(y_test_fold, x_test_fold, w)
+                
+                total_loss += loss
+            
+            avg_loss = total_loss / k
+            losses.append((gamma, avg_loss))
+            print(f"Max Iters: {max_iters}, Gamma: {gamma}, Avg Loss: {avg_loss}")
+            
+            if avg_loss < best_score:
+                best_score = avg_loss
+                best_w = w
+                best_params = {
+                    "max_iters": max_iters,
+                    "gamma": gamma,
+                }
+                
+    return best_w, best_params, losses            
+    
+
+def grid_search_sgd(y_train, x_train, param_grid, w_initial, k=5):
+    best_params = None
+    best_score = float("inf")
+    best_w = w_initial
+    losses = []
+    
+    # Generate folds for cross-validation
+    folds = k_fold_split(x_train, y_train, k)
+    
+    # Iterate over each combination of parameters
+    for max_iters in param_grid["max_iters"]:
+        for gamma in param_grid["gamma"]:
+            for batch_size in param_grid["batch_size"]:
+                total_loss = 0
+                # Perform k-fold cross-validation
+                for train_indices, test_indices in folds:
+                    x_train_fold = x_train[train_indices]
+                    y_train_fold = y_train[train_indices]
+                    x_test_fold = x_train[test_indices]
+                    y_test_fold = y_train[test_indices]
+                    
+                    # Train the model with training data
+                    ws, _ = imp.stochastic_gradient_descent(y_train_fold, x_train_fold, w_initial, max_iters, gamma, batch_size)
+                    w = ws[-1]
+                    # Test the model with testing data
+                    loss = imp.compute_loss(y_test_fold, x_test_fold, w)
+                    
+                    total_loss += loss
+                
+                avg_loss = total_loss / k
+                losses.append((gamma, avg_loss))
+                print(f"Max Iters: {max_iters}, Gamma: {gamma}, Avg Loss: {avg_loss}")
+                
+                if avg_loss < best_score:
+                    best_score = avg_loss
+                    best_w = w
+                    best_params = {
+                        "max_iters": max_iters,
+                        "gamma": gamma,
+                        "batch_size": batch_size,
+                    }
+                
+    return best_w, best_params, losses
+
+def grid_search_ridge(y_train, x_train, param_grid, w_initial, k=5):
+    best_params = None
+    best_score = float("inf")
+    best_w = w_initial
+    losses = []
+    
+    # Generate folds for cross-validation
+    folds = k_fold_split(x_train, y_train, k)
+    
+    # Iterate over each combination of parameters
+    for lambda_ in param_grid["lambdas"]:
+        total_loss = 0
+        # Perform k-fold cross-validation
+        for train_indices, test_indices in folds:
+            x_train_fold = x_train[train_indices]
+            y_train_fold = y_train[train_indices]
+            x_test_fold = x_train[test_indices]
+            y_test_fold = y_train[test_indices]
+            
+            # Train the model with training data
+            w, _ = imp.ridge_regression(y_train_fold, x_train_fold, lambda_)
+            # Test the model with testing data
+            loss = imp.compute_loss(y_test_fold, x_test_fold, w)
+            
+            total_loss += loss
+        
+        avg_loss = total_loss / k
+        losses.append((lambda_, avg_loss))
+        print(f"Lambda: {lambda_}, Avg Loss: {avg_loss}")
+        
+        if avg_loss < best_score:
+            best_score = avg_loss
+            best_w = w
+            best_params = {
+                "lambdas": lambda_,
+            }
+    
+    return best_w, best_params, losses
+        
+        
 
 
 def grid_search_logistic_regression(
