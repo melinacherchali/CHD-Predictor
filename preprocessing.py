@@ -2,7 +2,8 @@ import numpy as np
 import helpers as hlp
 import matplotlib.pyplot as plt
 import csv
-import os 
+import os
+
 
 def correlation(data, threshold=0.95):
     """
@@ -11,7 +12,7 @@ def correlation(data, threshold=0.95):
     Args :
         data : the input data
         threshold : the threshold for the correlation coefficient
-    
+
     Returns:
         list : the indices of the columns that are correlated
     """
@@ -103,13 +104,11 @@ def split_data(x, y, ratio, seed=1):
     return x[train_indices], y[train_indices], x[test_indices], y[test_indices]
 
 
-
-
 def PCA(xtrain, num_axis, graph=False):
     """
     This function performs PCA on the given data. And returns the data projected on the new basis.
 
-    Args: 
+    Args:
     xtrain: the input data
     num_axis: the number of dimensions to keep
     graph: boolean to plot the percentage of explained variance
@@ -182,7 +181,7 @@ def nan_score_filter(data, treshold):
     return rows_to_drop[0], cols_to_drop[0]
 
 
-def drop_nan(x_train, y_train, x_test=None, nan_thr=0.5,seed = 1):
+def drop_nan(x_train, y_train, x_test=None, nan_thr=0.5, seed=1):
     """
     This function drops the rows and columns with NaN values above a certain threshold.
     The criterion is computed, for each item of the array by taking the square root of the product of the NaN ratio of the row and column.
@@ -246,7 +245,8 @@ def drop_nan(x_train, y_train, x_test=None, nan_thr=0.5,seed = 1):
 
 
 def clean_data_final(
-    x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=0.5, std_thr=0.1, seed=1):
+    x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=0.5, std_thr=0.1, seed=1
+):
     """
     This function cleans the data by dropping columns and handling missing values.
 
@@ -258,13 +258,13 @@ def clean_data_final(
         nan_thr : the threshold for the NaN ratio
         std_thr : the threshold for the standard deviation
         seed : the seed for the random number generator
-    
-    Returns: 
+
+    Returns:
         Cleaned train and test data
     """
     np.random.seed(seed)
     # Replace the 'don't know' values with NaN (based on documentation)
-    path = os.getcwd() + '/dataset_to_release/x_train.csv'
+    path = os.getcwd() + "/dataset_to_release/x_train.csv"
     x_train_features = extract_features(path)  # Extract the feature names
     x_train_, x_test_ = clean_unknown_values(
         x_train_, x_test_, x_train_features
@@ -348,9 +348,9 @@ def clean_data_final(
 
 
 def index_replace_9(x_train_features):
-    ''' 
+    """
     This function returns the indices of the columns to be replaced with NaN values.
-    '''
+    """
     feature_names = [
         "_CHISPNC",
         "_RFHYPE5",
@@ -397,9 +397,9 @@ def index_replace_9(x_train_features):
 
 
 def index_replace_7(x_train_features):
-    '''
+    """
     This function returns the indices of the columns to be replaced with NaN values.
-    '''
+    """
     feature_names = [
         "LANDLINE",
         "HHADULT",
@@ -588,7 +588,7 @@ def clean_unknown_values(x_train, x_test, x_train_features):
         x_train : the input data
         x_test : the input data to predict
         x_train_features : the features of the input data
-    
+
     Returns:
         x_train_ : the input data with '77' and '99' values replaced with NaN
         x_test_ : the input data to predict with '77' and '99' values replaced with NaN

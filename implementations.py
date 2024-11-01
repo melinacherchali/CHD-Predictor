@@ -27,14 +27,14 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
 def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
     """
     Compute the mean squared error using stochastic gradient descent.
-    
+
     Args:
         y (numpy.ndarray): The target values.
         tx (numpy.ndarray): The input data.
         initial_w (numpy.ndarray): The initial weights.
         max_iters (int): The maximum number of iterations.
         gamma (float): The learning rate.
-    
+
     Returns:
         tuple containing the final weight vector and the final loss value.
             w: weights that minimize the loss function
@@ -71,11 +71,11 @@ def ridge_regression(y, tx, lambda_):
         y: the target values
         tx: the input data
         lambda_: the regularization parameter
-    
+
     Returns :
         tuple containing the final weight vector and the final loss value.
             w: weights that minimize the loss function
-            loss: the loss value 
+            loss: the loss value
     """
     n = tx.shape[0]
     d = tx.shape[1]
@@ -112,7 +112,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma, losses_return=False)
         losses.append(loss)
     if losses_return:
         return w, loss, losses
-    return (w,loss)
+    return (w, loss)
 
 
 def reg_logistic_regression(
