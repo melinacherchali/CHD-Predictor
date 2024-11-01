@@ -180,7 +180,7 @@ def nan_score_filter(data, treshold):
     return rows_to_drop[0], cols_to_drop[0]
 
 
-def drop_nan(x_train, y_train, x_test=None, nan_thr=0.5):
+def drop_nan(x_train, y_train, x_test=None, nan_thr=0.5,seed = 1):
     """
     This function drops the rows and columns with NaN values above a certain threshold.
     The criterion is computed, for each item of the array by taking the square root of the product of the NaN ratio of the row and column.
@@ -195,6 +195,7 @@ def drop_nan(x_train, y_train, x_test=None, nan_thr=0.5):
 
     returns: x_data with reduced rows and columns, y_data with reduced rows
     """
+    np.random.seed(seed)
 
     # check if the number of columns in the test data is the same as the train data
     assert (x_test is None) or (x_test.shape[1] == x_train.shape[1])
@@ -243,16 +244,15 @@ def drop_nan(x_train, y_train, x_test=None, nan_thr=0.5):
 
 
 def clean_data_final(
-    x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=0.5, std_thr=0.1
-):
+    x_train_, y_train_, x_test_, correlation_thr=0.95, nan_thr=0.5, std_thr=0.1, seed=1):
     """
     This function cleans the data by dropping columns and handling missing values.
 
     returns: cleaned train and test data
     """
-
+    np.random.seed(seed)
     # Replace the 'don't know' values with NaN (based on documentation)
-    path = os.getcwd() + "/dataset_to_release/x_train.csv"
+    path = '/Users/maelynenguyen/Desktop/dataset_to_release/x_train.csv'
     x_train_features = extract_features(path)  # Extract the feature names
     x_train_, x_test_ = clean_unknown_values(
         x_train_, x_test_, x_train_features

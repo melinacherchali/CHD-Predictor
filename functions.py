@@ -144,7 +144,7 @@ def compute_stoch_gradient(y, tx, w, batch_size=1):
     return gradient
 
 
-def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
+def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True,seed = 1):
     """
     Generate a minibatch iterator for a dataset.
     Takes as input two iterables (here the output desired values 'y' and the input data 'tx')
@@ -177,6 +177,7 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):
     for minibatch_y, minibatch_tx in batch_iter(y, tx, 32):
         <DO-SOMETHING>
     """
+    np.random.seed(seed)
     data_size = len(y)  # NUmber of data points.
     batch_size = min(data_size, batch_size)  # Limit the possible size of the batch.
     max_batches = int(
@@ -301,8 +302,9 @@ def f1_score_(y_true, y_pred):
     return f1_score
 
 
-def k_fold_split(x, y, k):
+def k_fold_split(x, y, k,seed = 1):
     """Utility function to split data into k folds."""
+    np.random.seed(seed)
     indices = np.arange(len(y))
     np.random.shuffle(indices)
     fold_size = len(y) // k
@@ -562,7 +564,7 @@ def best_threshold(y_pred, y):
 ### Optimizer  ###
 
 
-def adam_optimizer(y, x, w, max_iters, gamma, beta1=0.9, beta2=0.999, epsilon=1e-8):
+def adam_optimizer(y, x, w, max_iters, gamma, beta1, beta2, epsilon):
     m, v = np.zeros_like(w), np.zeros_like(w)
     for iter in range(max_iters):
         # Compute predictions and gradients
@@ -579,3 +581,29 @@ def adam_optimizer(y, x, w, max_iters, gamma, beta1=0.9, beta2=0.999, epsilon=1e
         # Update weights
         w -= gamma * m_hat / (np.sqrt(v_hat) + epsilon)
     return w
+
+def grid_search_adam(y, x, param_grid, initial_w):
+    best_params = {}
+    best_loss = np.inf
+    losses = []
+    for max_iters in param_grid["max_iters"]:
+        for gamma in param_grid["gamma"]:
+            for beta1 in param_grid["beta1"]:
+                for beta2 in param_grid["beta2"]:
+                    for epsilon in param_grid["epsilon"]:
+                        w = adam_optimizer(y, x, initial_w, max_iters, gamma, beta1, beta2, epsilon)
+                        loss = logistic_loss(y, x, w)
+                        losses.append(loss)
+                        print("Parameters: ", max_iters, gamma, beta1, beta2, epsilon)
+                        print("Loss: ", loss)
+
+                        if loss < best_loss:
+                            best_loss = loss
+                            best_params["max_iters"] = max_iters
+                            best_params["gamma"] = gamma
+                            best_params["loss"] = loss
+                            best_params["beta1"] = beta1
+                            best_params["beta2"] = beta2
+                            best_params["epsilon"] = epsilon
+
+    return w, best_params, losses
