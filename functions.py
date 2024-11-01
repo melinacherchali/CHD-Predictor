@@ -3,17 +3,6 @@ import implementations as imp
 
 ### Helper functions ###
 
-
-def test_function(func):
-    y = np.array([5, 10, 17])
-    tx = np.array([[1, 2], [1, 3], [1, 4]])
-    initial_w = np.array([0, 0])
-    max_iters = 1000
-    gamma = 0.1
-    a = func(y, tx, initial_w, max_iters, gamma)
-    print(a[0], "MSE : ", a[1])
-
-
 def compute_loss(y, tx, w):
     """Calculate the loss using MSE.
 
@@ -209,6 +198,16 @@ def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True,seed = 1):
 
 
 def sigmoid(t):
+    '''Apply the sigmoid function on t.
+
+    Args: 
+        t: a scalar or numpy array
+    
+    Return:
+        The sigmoid function applied to t.
+    
+    '''
+
     sigmoid = 1 / (1 + np.exp(-t))
     sigmoid = np.where(sigmoid == 0, 1e-10, sigmoid)
     sigmoid = np.where(sigmoid == 1, 1 - 1e-10, sigmoid)
@@ -216,23 +215,52 @@ def sigmoid(t):
 
 
 def logistic_gradient(y, tx, w):
+    '''
+    Compute the gradient of the loss function for logistic regression.
+    
+    Args:
+        y: the labels
+        tx: the features
+        w: the weights
+
+    Return:
+        The gradient of the loss function.
+    '''
     y_pred = sigmoid(tx @ w)
     gradient = np.dot(tx.T, y_pred - y) / y.shape[0]
     return gradient
 
 
 def penalized_logistic_regression(y, tx, w, lambda_):
+    '''
+    Compute the gradient of the loss function for logistic regression with L2 regularization.
+    
+    Args:
+        y: the labels
+        tx: the features
+        w: the weights
+        lambda_: the regularization parameter
+    
+    Return:
+        The gradient of the loss function.
+    '''
     N = y.shape[0]
     gradient = logistic_gradient(y, tx, w) + lambda_ * 2 * w  # penalized gradient
     return gradient
 
 
 def logistic_loss(y, tx, w):
-    """
-    y : binary label (0,1)
-    tx : features
-    w : weights
-    """
+    '''
+    Compute the loss function for logistic regression.
+    
+    Args:
+        y: the labels
+        tx: the features
+        w: the weights
+    
+    Return:
+        The loss function for the Logistic.
+    '''
     N = tx.shape[0]
     loss = (
         -1
@@ -245,6 +273,15 @@ def logistic_loss(y, tx, w):
 ### Evaluation ###
 
 def accuracy_score_(y_true, y_pred):
+    '''Compute the accuracy of the model.
+    
+    Args:
+        y_true: the true labels
+        y_pred: the predicted labels
+    
+    Return:
+        The accuracy of the model.
+    '''
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
 
@@ -266,6 +303,16 @@ def accuracy_score_(y_true, y_pred):
 
 
 def f1_score_(y_true, y_pred):
+    '''Compute the f1 score of the model.
+    
+    Args:
+        y_true: the true labels
+        y_pred: the predicted labels
+    
+    Return:
+        The f1 score of the model.
+    '''
+
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
 
@@ -303,7 +350,18 @@ def f1_score_(y_true, y_pred):
 
 
 def k_fold_split(x, y, k,seed = 1):
-    """Utility function to split data into k folds."""
+    """ 
+    Utility function to split data into k folds.
+    
+    Args:
+        x: numpy array of shape=(N, D)
+        y: numpy array of shape=(N, )
+        k: the number of folds
+        seed: the random seed for reproducibility
+    
+    Returns:
+        A list of k tuples containing the indices of the training and testing data for each fold.
+    """
     np.random.seed(seed)
     indices = np.arange(len(y))
     np.random.shuffle(indices)
@@ -321,6 +379,21 @@ def k_fold_split(x, y, k,seed = 1):
 
 
 def grid_search_gd(y_train, x_train, param_grid, w_initial, k=5):
+    ''' 
+    Perform a grid search to find the best parameters for the Gradient Descent algorithm.
+    
+    Args:
+        y_train: the labels
+        x_train: the features
+        param_grid: a dictionary containing the parameters to search
+        w_initial: the initial weights
+        k: the number of folds for cross-validation
+    
+    Returns:
+        best_w: the best weights
+        best_params: the best parameters
+        losses: a list of tuples containing the parameters and the average loss for each combination
+    '''
     best_params = None
     best_score = float("inf")
     best_w = w_initial
@@ -363,6 +436,21 @@ def grid_search_gd(y_train, x_train, param_grid, w_initial, k=5):
     
 
 def grid_search_sgd(y_train, x_train, param_grid, w_initial, k=5):
+    '''
+    Perform a grid search to find the best parameters for the Stochastic Gradient Descent algorithm.
+    
+    Args:
+        y_train: the labels
+        x_train: the features
+        param_grid: a dictionary containing the parameters to search
+        w_initial: the initial weights
+        k: the number of folds for cross-validation
+    
+    Returns:
+        best_w: the best weights
+        best_params: the best parameters
+        losses: a list of tuples containing the parameters and the average loss for each combination
+    '''
     best_params = None
     best_score = float("inf")
     best_w = w_initial
@@ -407,6 +495,22 @@ def grid_search_sgd(y_train, x_train, param_grid, w_initial, k=5):
     return best_w, best_params, losses
 
 def grid_search_ridge(y_train, x_train, param_grid, w_initial, k=5):
+    '''
+    Perform a grid search to find the best parameters for the Ridge Regression algorithm.
+    
+    Args:
+        y_train: the labels
+        x_train: the features
+        param_grid: a dictionary containing the parameters to search
+        w_initial: the initial weights
+        k: the number of folds for cross-validation
+    
+    Returns:
+        best_w: the best weights
+        best_params: the best parameters
+        losses: a list of tuples containing the parameters and the average loss for each combination
+    
+    '''
     best_params = None
     best_score = float("inf")
     best_w = w_initial
@@ -448,9 +552,22 @@ def grid_search_ridge(y_train, x_train, param_grid, w_initial, k=5):
         
 
 
-def grid_search_logistic_regression(
-    y_train, x_train_cleaned, param_grid, w_initial, k=5
-):
+def grid_search_logistic_regression(y_train, x_train_cleaned, param_grid, w_initial, k=5):
+    '''
+    Perform a grid search to find the best parameters for the Logistic Regression algorithm.
+    
+    Args:
+        y_train: the labels
+        x_train_cleaned: the features
+        param_grid: a dictionary containing the parameters to search
+        w_initial: the initial weights
+        k: the number of folds for cross-validation
+        
+    Returns:
+        best_w: the best weights
+        best_params: the best parameters
+        losses: a list of tuples containing the parameters and the average loss for each combination
+    '''
     best_params = None
     best_score = float("inf")
     best_w = w_initial
@@ -494,9 +611,22 @@ def grid_search_logistic_regression(
     return best_w, best_params, losses
 
 
-def grid_search_reg_logistic_regression(
-    y_train, x_train_cleaned, param_grid, w_initial, k=5
-):
+def grid_search_reg_logistic_regression(y_train, x_train_cleaned, param_grid, w_initial, k=5):
+    '''
+    Perform a grid search to find the best parameters for the Regularized Logistic Regression algorithm.
+    
+    Args:
+        y_train: the labels
+        x_train_cleaned: the features
+        param_grid: a dictionary containing the parameters to search
+        w_initial: the initial weights
+        k: the number of folds for cross-validation
+    
+    Returns:
+        best_w: the best weights
+        best_params: the best parameters
+        losses: a list of tuples containing the parameters and the average loss for each combination
+    '''
     best_params = None
     best_score = float("inf")
     best_w = w_initial
@@ -545,8 +675,15 @@ def grid_search_reg_logistic_regression(
 
 
 def best_threshold(y_pred, y):
-    """y : binary (-1,1)
-    y_pred : binary (0,1)
+    """
+    Find the optimal threshold for the F1 score.
+
+    Args: 
+        y : binary (-1,1)
+        y_pred : binary (0,1)
+    
+    Returns:
+        The optimal threshold.
     """
     thresholds = np.arange(0.0, 1.0, 0.01)
     f1_scores = []
@@ -565,6 +702,23 @@ def best_threshold(y_pred, y):
 
 
 def adam_optimizer(y, x, w, max_iters, gamma, beta1, beta2, epsilon):
+    '''
+    Perform optimization using the Adam optimizer.
+    
+    Args:  
+        y: the labels
+        x: the features
+        w: the weights
+        max_iters: the number of iterations
+        gamma: the learning rate
+        beta1: the exponential decay rate for the first moment estimates
+        beta2: the exponential decay rate for the second-moment estimates
+        epsilon: a small scalar to prevent division by zero
+    
+    Returns:
+        w: the optimized weights
+        losses: a list of the loss value for each iteration
+    '''
     m, v = np.zeros_like(w), np.zeros_like(w)
     losses = []
     for iter in range(max_iters):
@@ -583,9 +737,24 @@ def adam_optimizer(y, x, w, max_iters, gamma, beta1, beta2, epsilon):
         w -= gamma * m_hat / (np.sqrt(v_hat) + epsilon)
         loss = imp.logistic_loss(y, x, w)
         losses.append(loss)
+
     return w,losses
 
 def grid_search_adam(y, x, param_grid, initial_w):
+    '''
+    Perform a grid search to find the best parameters for the Adam optimizer.
+    
+    Args:
+        y: the labels
+        x: the features
+        param_grid: a dictionary containing the parameters to search
+        initial_w: the initial weights
+        
+    Returns:
+        w: the best weights
+        best_params: the best parameters
+        losses: a list of the loss value for each combination
+    '''
     best_params = {}
     best_loss = np.inf
     losses = []

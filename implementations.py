@@ -36,7 +36,9 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
         gamma (float): The learning rate.
     
     Returns:
-        tuple: A tuple containing the last weight and the last loss.
+        tuple containing the final weight vector and the final loss value.
+            w: weights that minimize the loss function
+            loss: the loss value (scalar) for the last iteration of GD
     """
 
     ws, losses = stochastic_gradient_descent(y, tx, initial_w, max_iters, gamma)
@@ -48,11 +50,13 @@ def least_squares(y, tx):
     Calculate the least squares solution.
 
     Args :
-        y: the target values
-        tx: the input data
+        y (numpy.ndarray): the target values
+        tx (numpy.ndarray): the input data
 
     Returns :
-        tuple: A tuple containing the weight and the loss.
+        tuple containing the final weight vector and the final loss value.
+            w: weights that minimize the loss function
+            loss: the loss value
 
     """
     w = np.linalg.solve(tx.T.dot(tx), tx.T.dot(y))
@@ -69,7 +73,9 @@ def ridge_regression(y, tx, lambda_):
         lambda_: the regularization parameter
     
     Returns :
-        tuple: A tuple containing the weight and the loss.
+        tuple containing the final weight vector and the final loss value.
+            w: weights that minimize the loss function
+            loss: the loss value 
     """
     n = tx.shape[0]
     d = tx.shape[1]
@@ -91,6 +97,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma, losses_return=False)
         gamma (float): The learning rate.
 
     Returns:
+        tuple containing the final weight vector and the final loss value.
         w: final weight vector
         loss: final loss value
     """
@@ -105,10 +112,7 @@ def logistic_regression(y, tx, initial_w, max_iters, gamma, losses_return=False)
         losses.append(loss)
     if losses_return:
         return w, loss, losses
-    return (
-        w,
-        loss,
-    )
+    return (w,loss)
 
 
 def reg_logistic_regression(
