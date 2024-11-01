@@ -128,6 +128,7 @@ def reg_logistic_regression(
         max_iters (int): The maximum number of iterations.
         gamma (float): The learning rate.
     Returns:
+        tuple containing the final weight vector and the final loss value.
         w: The optimized weight vector.
         loss: The final loss value.
     """

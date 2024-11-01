@@ -44,11 +44,11 @@ This repository contains the following main components:
 
 ```helpers.py```: Helper functions for loading data, creating CSV submissions, and basic utilities used throughout the project.
 
-```functions.py``` : 
+```functions.py``` : It contains all the additional functions used to implement the machine learning methods. 
 
-```linear.ipynb``` :
+```linear.ipynb``` : It contains the implementation of the linear regression models 
 
-```logistic.ipynb``` :
+```logistic.ipynb``` : It contains the implementation of the logistic regression models 
 
 ```run.ipynb``` : This script produces the final predictions in the format required for submission to the competition platform. It processes the data, trains the model, and generates the CSV file for submission.
 
