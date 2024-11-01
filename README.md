@@ -71,6 +71,8 @@ We evaluated the model using cross-validation and submitted our predictions to t
 
 The final predictions are stored in a CSV file ```final_pred.csv``` for submission. 
 
+The test performance of our submission is of 0.418 (note : not the best score obtained on AICrowd)
+
 ## How to use 
 
 1. Ensure the dataset is placed in the ```dataset_to_release``` folder.
