@@ -2,7 +2,7 @@ import numpy as np
 import helpers as hlp
 import matplotlib.pyplot as plt
 import csv
-
+import os 
 
 def correlation(data, threshold=0.95):
     """
@@ -264,7 +264,7 @@ def clean_data_final(
     """
     np.random.seed(seed)
     # Replace the 'don't know' values with NaN (based on documentation)
-    path = '/Users/maelynenguyen/Desktop/dataset_to_release/x_train.csv'
+    path = os.getcwd() + '/dataset_to_release/x_train.csv'
     x_train_features = extract_features(path)  # Extract the feature names
     x_train_, x_test_ = clean_unknown_values(
         x_train_, x_test_, x_train_features
