@@ -566,6 +566,7 @@ def best_threshold(y_pred, y):
 
 def adam_optimizer(y, x, w, max_iters, gamma, beta1, beta2, epsilon):
     m, v = np.zeros_like(w), np.zeros_like(w)
+    losses = []
     for iter in range(max_iters):
         # Compute predictions and gradients
         predictions = imp.sigmoid(np.dot(x, w))
@@ -580,7 +581,9 @@ def adam_optimizer(y, x, w, max_iters, gamma, beta1, beta2, epsilon):
 
         # Update weights
         w -= gamma * m_hat / (np.sqrt(v_hat) + epsilon)
-    return w
+        loss = imp.logistic_loss(y, x, w)
+        losses.append(loss)
+    return w,losses
 
 def grid_search_adam(y, x, param_grid, initial_w):
     best_params = {}

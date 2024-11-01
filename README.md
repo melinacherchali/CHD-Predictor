@@ -20,6 +20,7 @@ To run this project, you will need to install the following dependencies:
 - Python 3.7 (or higher)
 - NumPy
 - Matplotlib
+- csv 
 
 You can install these dependencies by running the following command:
 
@@ -41,10 +42,15 @@ This repository contains the following main components:
 
 ```implementations.py```: This script contains the implementation of the machine learning methods required for the project. 
 
-```run.py```: This script produces the final predictions in the format required for submission to the competition platform. It processes the data, trains the model, and generates the CSV file for submission.
-
-
 ```helpers.py```: Helper functions for loading data, creating CSV submissions, and basic utilities used throughout the project.
+
+```functions.py``` : 
+
+```linear.ipynb``` :
+
+```logistic.ipynb``` :
+
+```run.ipynb``` : This script produces the final predictions in the format required for submission to the competition platform. It processes the data, trains the model, and generates the CSV file for submission.
 
 ## Methods implemented
 
@@ -55,6 +61,7 @@ The following machine learning techniques have been implemented from scratch (as
 - Ridge Regression
 - Logistic Regression
 - Regularized Logistic Regression
+- Adam Optimizer 
 
 Each function returns the final weight vector and the corresponding loss value.
 
